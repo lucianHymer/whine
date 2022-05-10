@@ -1,0 +1,12 @@
+# Install
+nvm use 14
+npm i -g truffle
+truffle unbox react
+
+# Run
+truffle develop
+> compile
+> migrate (--reset necessary after restart)
+
+cd client
+npm run start (runs the script "start")
