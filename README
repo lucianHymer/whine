@@ -1,5 +1,5 @@
 # Install
-nvm use 18
+nvm use 16
 npm i -g truffle
 truffle unbox react
 
