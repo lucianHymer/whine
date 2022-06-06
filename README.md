@@ -13,3 +13,11 @@ npx hardhat node
 node scripts/sample-script.js
 npx hardhat help
 ```
+
+# Created with
+```shell
+nvm use 16
+mkdir whine
+npx hardhat # Follow setup for basic example
+npx create-react-app client
+```
