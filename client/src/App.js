@@ -1,3 +1,8 @@
+import { useState, useEffect } from "react";
+import { InjectedConnector } from "@web3-react/injected-connector";
+import { useWeb3React } from '@web3-react/core'
+import Web3 from 'web3'
+
 import logo from './logo.svg';
 import './App.css';
 
