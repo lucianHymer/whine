@@ -20,4 +20,6 @@ nvm use 16
 mkdir whine
 npx hardhat # Follow setup for basic example
 npx create-react-app client
+cd client
+npm audit fix --force
 ```
