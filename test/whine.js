@@ -1,18 +1,18 @@
 const { expect } = require("chai");
 const { ethers, waffle } = require("hardhat");
-const { constants } = require("./helpers.js");
+const { constants, hash } = require("./helpers.js");
 
 describe("Whine", function () {
   let owner, addr1, addr2, whine, Whine;
 
   before(async function(){
-    Whine = await ethers.getContractFactory("Whine");
+    [owner, addr1, addr2] = await ethers.getSigners();
+    Whine = await ethers.getContractFactory("Whine", {signer: owner});
   });
 
   beforeEach(async function(){
     whine = await Whine.deploy();
     whine.deployed();
-    [owner, addr1, addr2] = await ethers.getSigners();
   });
 
   it("Should mint multiple tokens", async function () {
@@ -25,19 +25,39 @@ describe("Whine", function () {
       withArgs(constants.ZERO_ADDRESS, addr2.address, 2);
   });
 
-  it("Should mint a bottle", async function () {
-    await expect(whine.mintBottle(addr1.address)).
+  it("Should reject mint from non WINERY_ROLE", async function () {
+    await expect(whine.connect(addr1).mintNft(addr2.address, "2")).
+      to.be.revertedWith('AccessControl');
+  });
+
+  it("Should accept mint from WINERY_ROLE", async function () {
+    await whine.grantRole(hash('WINERY_ROLE'), addr1.address);
+    await expect(whine.connect(addr1).mintNft(addr2.address, "2")).
       to.emit(whine, 'Transfer').
-      withArgs(constants.ZERO_ADDRESS, addr1.address, 1);
-    expect(await whine.tokenURI(1)).
-      to.include('QmQfsiVaeTnQkesuwnCwmLzhQLP2uRjHJZhVyoqu6jLFWQ');
+      withArgs(constants.ZERO_ADDRESS, addr2.address, 1);
+  });
+
+  it("Should assign royalty to minter", async function () {
+    await whine.grantRole(hash('WINERY_ROLE'), addr1.address);
+    await expect(whine.connect(addr1).mintNft(addr2.address, "2")).
+      to.emit(whine, 'Transfer').
+      withArgs(constants.ZERO_ADDRESS, addr2.address, 1);
+    const [royaltyReceiver, royaltyValue] = await whine.royaltyInfo(1, 1000);
+    expect(royaltyReceiver).to.equal(addr1.address);
+    expect(royaltyValue).to.equal(20);
+  });
+
+  it("Should reject role asignment from non ADMIN", async function () {
+    await expect(
+      whine.connect(addr1).grantRole(hash('WINERY_ROLE'), addr1.address)
+    ).to.be.revertedWith('AccessControl');
   });
 
   it("Should set token URI", async function () {
-    await expect(whine.mintNft(addr1.address, "1")).
+    await expect(whine.mintNft(addr2.address, "1")).
       to.emit(whine, 'Transfer').
-      withArgs(constants.ZERO_ADDRESS, addr1.address, 1);
+      withArgs(constants.ZERO_ADDRESS, addr2.address, 1);
 
-    expect(await whine.tokenURI(1)).to.equal("1");
+    expect(await whine.tokenURI(1)).to.equal("ipfs://1");
   });
 });

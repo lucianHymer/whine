@@ -12,6 +12,7 @@
     "@openzeppelin/contracts": "^4.6.0"
   },
   "scripts": {
+    "test": "hardhat test",
     "test:debug": "mocha --inspect-brk --inspect test"
   }
 }
