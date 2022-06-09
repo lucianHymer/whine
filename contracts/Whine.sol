@@ -3,60 +3,83 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/common/ERC2981.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 import "hardhat/console.sol";
 
 contract Whine is ERC721URIStorage, AccessControl, ERC2981 {
   /**
    * @dev Emitted when royalties are paid to `to` from the sale of `tokenId`
    */
-  event Payout(address indexed to, uint256 indexed tokenId, uint256 amount, uint256 ownerTake);
+  event Payout(address indexed to, uint256 indexed tokenId, uint256 amount);
+
+  /**
+   * @dev Emitted when fees are withdrawn to `to`.
+   */
+  event FeeWithdraw(address indexed to);
 
   using Counters for Counters.Counter;
   Counters.Counter private _tokenId;
 
+  uint96 ownerTakeBasis;
+
   bytes32 public constant WINERY_ROLE = keccak256("WINERY_ROLE");
   bytes32 public constant TRUSTEE_ROLE = keccak256("TRUSTEE_ROLE");
 
-  constructor() ERC721("Whine NFT", "WHINE") {
+  constructor(uint96 _ownerTakeBasis) ERC721("Whine NFT", "WHINE") {
     console.log('OWNER', msg.sender);
     _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     _setupRole(WINERY_ROLE, msg.sender);
     _setupRole(TRUSTEE_ROLE, msg.sender);
-    _setDefaultRoyalty(msg.sender, 100);
+    // _setDefaultRoyalty(msg.sender, defaultRoyaltyBasis);
+    ownerTakeBasis = _ownerTakeBasis;
   }
 
-  function mintNft(address to, string memory ipfsMetadataURI) onlyRole(WINERY_ROLE) external returns (uint256) {
+  function withdrawFees(address payable to) external onlyRole(TRUSTEE_ROLE) {
+    to.transfer(address(this).balance);
+    emit FeeWithdraw(to);
+  }
+
+  function mintNft(
+    address to,
+    string memory ipfsMetadataURI,
+    uint96 royaltyBasis
+  ) onlyRole(WINERY_ROLE) external returns (uint256) {
     console.log('MINTER', msg.sender);
     _tokenId.increment();
 
     uint256 newNftTokenId = _tokenId.current();
     _safeMint(to, newNftTokenId);
     _setTokenURI(newNftTokenId, ipfsMetadataURI);
-    _setTokenRoyalty(newNftTokenId, msg.sender, 200);
+    _setTokenRoyalty(newNftTokenId, msg.sender, royaltyBasis);
 
     return newNftTokenId;
   }
 
-  function approveTreasury(uint256 tokenId){
-  }
+  function sell(
+    address payable from,
+    address to,
+    uint256 tokenId,
+    uint256 salePrice
+  ) payable public {
+    // Do this first to fail quickly if this is an invalid transfer
+    safeTransferFrom(from, to, tokenId);
+    require(msg.value >= salePrice, "Must send enough ETH to initiate sale.");
 
-  function sendAndPayRoyalties(address to, uint256 tokenId, uint256 salePrice) payable public onlyRole(TRUSTEE_ROLE) returns (address, uint256, uint256) {
-    address from = ownerOf(tokenId);
     address royaltyReceiver;
     uint256 payout;
 
     (royaltyReceiver, payout) = royaltyInfo(tokenId, salePrice);
 
-    uint256 ownerTake = payout / 100;
+    uint256 ownerTake = ownerTakeBasis * salePrice / 10000;
 
-    payout = payout - ownerTake;
+    uint256 sellerProfit = salePrice - payout - ownerTake;
 
-    safeTransferFrom(from, to, tokenId);
+    payable(royaltyReceiver).transfer(payout);
+    from.transfer(sellerProfit);
 
-    address payable owner = address(uint160(getRoleAdmin(DEFAULT_ADMIN_ROLE)));
-    emit Payout(royaltyReceiver, tokenId, payout, ownerTake);
+    emit Payout(royaltyReceiver, tokenId, payout);
   }
 
   function _baseURI() pure internal override returns (string memory) {
