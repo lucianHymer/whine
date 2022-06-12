@@ -6,7 +6,8 @@ import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
 import logo from './logo.svg';
 import './App.css';
-import EthersAuthenticator from './App/EthersAuthenticator';
+import axios from 'axios';
+import { addAxiosAuthenticatorMiddleware } from './axios_authenticator';
 
 const MetamaskWallet = new InjectedConnector({
   supportedChainIds: [31337],
@@ -29,11 +30,15 @@ function App(){
   const { activate, account, chainId, library, error } = useWeb3React();
   const [ whineContract, setWhineContract ] = useState(null);
 
-  const callRoot = () => {
-    fetch(`http://localhost:3001/`, {
-      credentials: 'include',
-    }).then(res => console.log(res)).catch(e => console.log(e));
+  const callCreateMetadata = () => {
+    axios.post(`http://localhost:3001/create_nft_metadata`, {
+    }).then(res => console.log('res', res)).catch(e => console.log('error', e));
   };
+
+  useEffect( () => {
+    if(account)
+      addAxiosAuthenticatorMiddleware(account, library);
+  }, [account]);
 
   useEffect( () => {
     try {
@@ -60,10 +65,8 @@ function App(){
     }
   }, [error, account, chainId, library, whineContract]);
 
-
   return (
     <div className="App">
-      <EthersAuthenticator />
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
@@ -82,7 +85,7 @@ function App(){
         <br />
         <button onClick={() => mintNft(whineContract, account) }>Mint</button>
         <br />
-        <button onClick={callRoot}>Mint</button>
+        <button onClick={callCreateMetadata}>Mint</button>
         <br />
         {error ? error.message : ""}
       </header>
