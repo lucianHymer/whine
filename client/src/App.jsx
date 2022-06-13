@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { abi as whineAbi } from "./contracts/Whine.sol/Whine.json";
-import { networks as whineNetworks } from "./contracts/Whine.sol/network.json";
+import Whine from "./contracts/Whine.sol/Whine.json";
+import WhineNetworks from "./contracts/Whine.sol/network.json";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
-import logo from './logo.svg';
-import './App.css';
 import axios from 'axios';
 import { addAxiosAuthenticatorMiddleware } from './axios_authenticator';
+import { Flex, Spacer, VStack, Button, Center } from '@chakra-ui/react';
 
 const MetamaskWallet = new InjectedConnector({
   supportedChainIds: [31337],
@@ -41,7 +40,7 @@ function App(){
   useEffect( () => {
     if(account)
       addAxiosAuthenticatorMiddleware(account, library);
-  }, [account]);
+  }, [account, library]);
 
   useEffect( () => {
     try {
@@ -52,10 +51,10 @@ function App(){
         console.log('library', library);
 
         // Get the contract instance.
-        const deployedNetwork = whineNetworks[chainId];
+        const deployedNetwork = WhineNetworks.networks[chainId];
         setWhineContract(new ethers.Contract(
           deployedNetwork.address,
-          whineAbi,
+          Whine.abi,
           library.getSigner(),
         ));
       }
@@ -69,28 +68,24 @@ function App(){
   }, [error, account, chainId, library, whineContract]);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <br />
-        <button onClick={() => activate(MetamaskWallet) }>Connect Metamask Wallet</button>
-        <br />
-        <button onClick={() => mintNft(whineContract, account) }>Mint</button>
-        <br />
-        {error ? error.message : ""}
-      </header>
-    </div>
+    <Flex h='100vh' direction='column'>
+        <Flex h="10%">
+          <Spacer />
+          <Button m={2} size='md' onClick={() => activate(MetamaskWallet) }>
+            Connect Wallet
+          </Button>
+        </Flex>
+      <Spacer />
+      <Center>
+        <VStack>
+          <label>Form</label>
+          <Button size='md' onClick={() => mintNft(whineContract, account) }>
+            Mint
+          </Button>
+        </VStack>
+      </Center>
+      <Spacer />
+    </Flex>
   );
 }
 
