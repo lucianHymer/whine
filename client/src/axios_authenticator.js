@@ -18,6 +18,7 @@ export function addAxiosAuthenticatorMiddleware(account, library){
             const signer = library.getSigner();
             return signer.signMessage(message);
           })
+        // Add a "I see that you rejected" message on reject
           .then(signedMessage => {
             config.headers.WHINE_ADDRESS = account;
             config.headers.WHINE_AUTH = signedMessage;

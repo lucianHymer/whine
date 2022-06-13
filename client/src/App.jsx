@@ -24,16 +24,19 @@ function mintNft(whineContract, account){
       "winery": "Epoch",
     }
   };
+  axios.post('http://localhost:3001/create_nft_metadata', {
+    metadata
+  }).then(res => {
+    console.log('res', res)
+    whineContract.mintNft(account, res.data.ipfsHash, 300)
+  }).catch(e => {
+    console.log('Error creating NFT metadata', e)
+  });
 }
 
 function App(){
   const { activate, account, chainId, library, error } = useWeb3React();
   const [ whineContract, setWhineContract ] = useState(null);
-
-  const callCreateMetadata = () => {
-    axios.post(`http://localhost:3001/create_nft_metadata`, {
-    }).then(res => console.log('res', res)).catch(e => console.log('error', e));
-  };
 
   useEffect( () => {
     if(account)
@@ -84,8 +87,6 @@ function App(){
         <button onClick={() => activate(MetamaskWallet) }>Connect Metamask Wallet</button>
         <br />
         <button onClick={() => mintNft(whineContract, account) }>Mint</button>
-        <br />
-        <button onClick={callCreateMetadata}>Mint</button>
         <br />
         {error ? error.message : ""}
       </header>

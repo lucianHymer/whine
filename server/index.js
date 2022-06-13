@@ -1,28 +1,26 @@
+require('dotenv').config();
 const ethers = require('ethers');
 const crypto = require('crypto');
 const express = require('express');
-const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const pinataSDK = require('@pinata/sdk');
 const cors = require('cors');
-const pinata = pinataSDK(process.env.PINATA_API_KEY, process.env.PINATA_API_SECRET);
 const NodeCache = require( "node-cache" );
+
+const pinata = pinataSDK(process.env.PINATA_API_KEY, process.env.PINATA_API_SECRET);
 
 const app = express();
 
 app.use(
   cors({
     origin: "http://localhost:3000",
-    credentials: true,
   })
 );
-
-app.use(cookieParser());
 
 const jsonParser = bodyParser.json();
 
 const nonceCache = new NodeCache({
-  stdTtl: 20,
+  stdTtl: 20, // seconds
   checkPeriod: 120,
 });
 
@@ -49,8 +47,6 @@ const verifyAuthentication = (req, res, next) => {
     return respondError(res, "Unable to decode signature", error);
   }
 
-  console.log(address);
-  console.log(decodedAddress);
   if (address !== decodedAddress)
     return res.status(403).send("Invalid signature");
 
@@ -60,29 +56,24 @@ const verifyAuthentication = (req, res, next) => {
 };
 
 app.post('/create_nft_metadata', jsonParser, verifyAuthentication, (req, res) => {
-  const address = res.locals.address;
-  res.json({message: `Welcome, ${address || "please authenticate"}`});
+  const { address } = res.locals;
+  console.log('body', req.body);
+  const { metadata } = req.body;
+  pinata.testAuthentication().then((result) => {
+    // TODO add options to this call to enable searching on IPFS
+    pinata.pinJSONToIPFS(metadata).then( result => {
+      console.log('IPFS Hash', result.IpfsHash);
+      res.json({'ipfsHash': result.IpfsHash});
+    }).catch((err) => {
+      return respondError(res, 'Failed to pin with Pinata', err);
+    });
+  }).catch((err) => {
+    return respondError(res, 'Failed to authenticate with Pinata', err);
+  });
 });
 
 app.get('/', (req, res) => {
-  res.json({message: `Welcome, ${address || "please authenticate"}`});
-});
-
-app.post('/', jsonParser, (req, res) => {
-  // pinata.testAuthentication().then((result) => {
-  //   //handle successful authentication here
-  //   console.log(result);
-  //   // TODO add options to this call
-  //   pinata.pinJSONToIPFS(metadata).then( result => {
-  //     console.log('IPFS Hash', result.IpfsHash);
-  //     whineContract.mintNft(account, result.IpfsHash, 300)
-  //       .catch( e => console.log('Error minting NFT: ', e) );
-  //   }).catch((err) => {
-  //     console.log('Failed to pin with Pinata: ', err);
-  //   });
-  // }).catch((err) => {
-  //   console.log('Failed to authenticate with Pinata: ', err);
-  // });
+  res.json({message: `Welcome, ${req.locals.address || "please authenticate"}`});
 });
 
 app.get('/authentication/:address/initiate', (req, res) => {
@@ -93,6 +84,7 @@ app.get('/authentication/:address/initiate', (req, res) => {
   res.json({message});
 });
 
+// TODO add an if-testing to return error
 function respondError(res, message, error){
   return res.status(403).json({errors: [{
     message,
