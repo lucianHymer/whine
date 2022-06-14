@@ -46,7 +46,7 @@ const App = () => {
   }, [error, account, chainId, library, whineContract]);
 
   return (
-    <Flex h='100vh' direction='column'>
+    <Flex bg='purple.50' h='100vh' direction='column'>
       <Header />
       <Spacer />
       <Body whineContract={whineContract} />

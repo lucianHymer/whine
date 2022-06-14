@@ -34,7 +34,7 @@ const MintForm = ({whineContract}) => {
   const { account } = useWeb3React();
 
   return (
-    <Box direction='row' p={5} rounded='xl' border='2px' borderColor='purple.300' width='30%' boxShadow='lg'>
+    <Box direction='row' p={5} rounded='xl' border='2px' borderColor='purple.300' width='30%' boxShadow='lg' bg='white'>
       <form align='center'>
         <FormControl isRequired>
           <FormLabel requiredIndicator='' htmlFor='varietal'>Varietal</FormLabel>
