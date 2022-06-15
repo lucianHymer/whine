@@ -26,14 +26,15 @@ const RoyaltiesField = ({}) => {
       <FormLabel requiredIndicator='' htmlFor='royalties'>Royalties</FormLabel>
       <InputGroup size='sm'>
         <NumberInput
+          w='100%'
           value={format(royalties)}
           onChange={valStr => setRoyalties(parse(valStr))}
           id='royalties'
-          step={0.5}
+          step={0.1}
           defaultValue={3}
           precision={2}
           min={0}
-          max={100}
+          max={50}
         >
           <NumberInputField />
           <NumberInputStepper>
@@ -70,18 +71,24 @@ function mintNft(whineContract, account){
 const MintForm = ({whineContract}) => {
   const { account } = useWeb3React();
   const [ wineryName, setWineryName ] = useState();
-  const [ initialLoad, setInitialLoad ] = useState(true);
+  const [ loaded, setLoaded ] = useState(false);
 
   useEffect( () => {
-    if(account && initialLoad){
-      setInitialLoad(false);
-      whineContract.getRegisteredWineryName(account).then( name =>
-        setWineryName(name)
-      );
+    if(account && !loaded){
+      whineContract.getRegisteredWineryName(account).then( name => {
+        setWineryName(name);
+        setLoaded(true);
+      });
     }
-  }, [whineContract, account, initialLoad]);
+    return () => {
+      if(loaded){
+        setWineryName(null);
+        setLoaded(false);
+      }
+    };
+  }, [whineContract, account, loaded]);
 
-  if(initialLoad){
+  if(!loaded){
     return "Looking for registered winery...";
   } else if(!wineryName){
     return "Winery not registered";
