@@ -9,7 +9,12 @@ const Body = ({whineContract}) => {
   return (
     <Flex>
       <Spacer />
-      <MintForm whineContract={whineContract} />
+      {
+        whineContract ?
+          <MintForm whineContract={whineContract} />
+          :
+          "Please connect your wallet"
+      }
       <Spacer />
     </Flex>
   );

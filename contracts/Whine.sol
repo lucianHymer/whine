@@ -19,10 +19,22 @@ contract Whine is ERC721URIStorage, AccessControl, ERC2981 {
    */
   event FeeWithdraw(address indexed to);
 
+  /**
+   * @dev Emitted when winery requests registration.
+   */
+  event RegisterWinery(address indexed wallet);
+
+  /**
+   * @dev Emitted when winery is approved.
+   */
+  event ApproveWinery(address indexed wallet);
+
   using Counters for Counters.Counter;
   Counters.Counter private _tokenId;
 
   uint96 ownerTakeBasis;
+
+  mapping(address => string) internal registeredWineryName;
 
   bytes32 public constant WINERY_ROLE = keccak256("WINERY_ROLE");
   bytes32 public constant TRUSTEE_ROLE = keccak256("TRUSTEE_ROLE");
@@ -36,9 +48,34 @@ contract Whine is ERC721URIStorage, AccessControl, ERC2981 {
     ownerTakeBasis = _ownerTakeBasis;
   }
 
+  function getRegisteredWineryName(address wallet) public view returns (string memory) {
+    console.log('getRWN', wallet);
+    string memory name = registeredWineryName[wallet];
+    console.log('name', name);
+    return name;
+  }
+
   function withdrawFees(address payable to) external onlyRole(TRUSTEE_ROLE) {
     to.transfer(address(this).balance);
     emit FeeWithdraw(to);
+  }
+
+  function registerWinery(address wallet, string calldata name) public {
+    require(bytes(registeredWineryName[wallet]).length == 0, "Winery address already registered");
+    console.log('REGISTER', wallet);
+    registeredWineryName[wallet] = name;
+    emit RegisterWinery(wallet);
+  }
+
+  function registerWinery(string calldata name) external {
+    registerWinery(msg.sender, name);
+  }
+
+  function approveWinery(address wallet) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    require(bytes(registeredWineryName[wallet]).length != 0, "Winery not registered");
+    grantRole(WINERY_ROLE, wallet);
+    console.log('APPROVE', wallet);
+    emit ApproveWinery(wallet);
   }
 
   function mintNft(

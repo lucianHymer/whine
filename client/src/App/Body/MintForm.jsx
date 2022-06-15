@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { useWeb3React } from '@web3-react/core'
 import { 
@@ -7,7 +7,44 @@ import {
   Input,
   FormLabel,
   FormControl,
+  InputGroup,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
 } from '@chakra-ui/react';
+
+const RoyaltiesField = ({}) => {
+  const format = (val) => val + '%';
+  const parse = (val) => val.replace(/\s*%\s*$/).trim()
+
+  const [royalties, setRoyalties] = useState('3.00');
+
+  return (
+    <FormControl isRequired mt={4}>
+      <FormLabel requiredIndicator='' htmlFor='royalties'>Royalties</FormLabel>
+      <InputGroup size='sm'>
+        <NumberInput
+          value={format(royalties)}
+          onChange={valStr => setRoyalties(parse(valStr))}
+          id='royalties'
+          step={0.5}
+          defaultValue={3}
+          precision={2}
+          min={0}
+          max={100}
+        >
+          <NumberInputField />
+          <NumberInputStepper>
+            <NumberIncrementStepper />
+            <NumberDecrementStepper />
+          </NumberInputStepper>
+        </NumberInput>
+      </InputGroup>
+    </FormControl>
+  );
+};
 
 function mintNft(whineContract, account){
   const metadata = {
@@ -32,19 +69,41 @@ function mintNft(whineContract, account){
 
 const MintForm = ({whineContract}) => {
   const { account } = useWeb3React();
+  const [ wineryName, setWineryName ] = useState();
+  const [ initialLoad, setInitialLoad ] = useState(true);
+
+  useEffect( () => {
+    if(account && initialLoad){
+      setInitialLoad(false);
+      whineContract.getRegisteredWineryName(account).then( name =>
+        setWineryName(name)
+      );
+    }
+  }, [whineContract, account, initialLoad]);
+
+  if(initialLoad){
+    return "Looking for registered winery...";
+  } else if(!wineryName){
+    return "Winery not registered";
+  }
 
   return (
-    <Box direction='row' p={5} rounded='xl' border='2px' borderColor='purple.300' width='30%' boxShadow='lg' bg='white'>
+    <Box p={5} rounded='xl' border='2px' borderColor='purple.300' width='30%' boxShadow='lg' bg='white'>
       <form align='center'>
-        <FormControl isRequired>
+        <FormControl isRequired isReadOnly>
+          <FormLabel requiredIndicator='' htmlFor='winery'>Winery</FormLabel>
+          <Input id='winery' variant='filled' size='sm' value={wineryName} />
+        </FormControl>
+        <FormControl isRequired mt={4}>
           <FormLabel requiredIndicator='' htmlFor='varietal'>Varietal</FormLabel>
-          <Input id='varietal' size='sm' placeholder="Pinot Noir"/>
+          <Input id='varietal' size='sm' placeholder="Pinot Noir" />
         </FormControl>
-        <FormControl isRequired>
+        <FormControl isRequired mt={4}>
           <FormLabel requiredIndicator='' htmlFor='vintage'>Vintage</FormLabel>
-          <Input id='vintage' size='sm' placeholder={new Date().getUTCFullYear()}/>
+          <Input id='vintage' size='sm' placeholder={new Date().getUTCFullYear()} />
         </FormControl>
-        <Button type='submit' mt={4} size='md' onClick={() => mintNft(whineContract, account) }>
+        <RoyaltiesField />
+        <Button type='submit' mt={6} size='md' onClick={() => mintNft(whineContract, account) }>
           Mint
         </Button>
       </form>

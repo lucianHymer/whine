@@ -25,12 +25,19 @@ async function main() {
   const content = JSON.stringify({ networks: {
     [chainId]: {address}
   }});
+
   const path = './artifacts/contracts/Whine.sol/network.json';
   fs.writeFileSync(path, content, err => {
     if(err) console.log(err);
   });
-  console.log(`Wrote ${content} to ${path}`);
 
+  const signer = whine.signer.address;
+  console.log('signer', signer);
+
+  await whine['registerWinery(address,string)'](signer, "Lucian's Whines");
+  await whine.approveWinery(signer);
+
+  console.log(`Wrote ${content} to ${path}`);
 
   console.log("Whine deployed to:", whine.address);
 }
