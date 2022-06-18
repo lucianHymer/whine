@@ -36,7 +36,7 @@ const PageLink = (props) => {
           { ...( match ?
             {
               bg:'foreground',
-              color:'white',
+              color:'secondary.main',
               borderWidth: theme.sizes['1'],
               borderRadius: theme.sizes['3'],
               borderColor: 'background',
@@ -85,7 +85,7 @@ const WalletButtonText = () => {
     return (
       <>
         <Spacer />
-        <Text color='green.300'>{"\u2B24"}</Text>
+        <Text color='secondary.main'>{"\u2B24"}</Text>
         <Spacer />
         Connected
         <Spacer />

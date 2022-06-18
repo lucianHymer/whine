@@ -5,7 +5,7 @@ import {
 
 const Card = (props) => {
   return (
-    <Box p={5} rounded='xl' border='2px' borderColor='foreground' boxShadow='lg' bg='whiteAlpha.800' {...props}>
+    <Box p={5} rounded='xl' border='2px' borderColor='foreground' boxShadow='lg' bg='midground' {...props}>
       {props.children}
     </Box>
   );

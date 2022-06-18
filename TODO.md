@@ -9,6 +9,7 @@
 - [ ] Add ability to mint a whole release of a wine w/ custom quantity
 - [ ] Winery reputation system
 - [ ] Make API handlers for the frontend to the backends
+- [ ] Swap out for graph API
 - [x] Add sections: Mint, Trade, Redeem
 - [x] Get Pinata NFT from the backend working
 - [x] Get started with frontend/chakra
