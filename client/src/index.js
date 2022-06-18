@@ -5,21 +5,13 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Web3ReactProvider } from '@web3-react/core'
 import { Web3Provider } from "@ethersproject/providers";
+import { BrowserRouter } from "react-router-dom";
 import {
   ChakraProvider,
-  extendTheme,
-  withDefaultColorScheme,
-  theme as baseTheme,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
+import theme from './theme';
 
-const customTheme = extendTheme(
-  {
-    colors: {
-      primary: baseTheme.colors.purple,
-    },
-  },
-  withDefaultColorScheme({ colorScheme: 'primary' })
-);
+import '@fontsource/kanit/400.css'
 
 function getLibrary(provider) {
   return new Web3Provider(provider);
@@ -28,9 +20,11 @@ function getLibrary(provider) {
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ChakraProvider theme={customTheme}>
+    <ChakraProvider theme={theme}>
       <Web3ReactProvider getLibrary={getLibrary}>
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </Web3ReactProvider>
     </ChakraProvider>
   </React.StrictMode>

@@ -11,9 +11,11 @@ import {
 import Body from './App/Body';
 import Header from './App/Header';
 
+const PAGES = ['Mint', 'Trade', 'Redeem']
+
 const App = () => {
   const { account, chainId, library, error } = useWeb3React();
-  const [ whineContract, setWhineContract ] = useState(null);
+  const [ whineContract, setWhineContract ] = useState();
 
   useEffect( () => {
     if(account)
@@ -46,8 +48,8 @@ const App = () => {
   }, [error, account, chainId, library, whineContract]);
 
   return (
-    <Flex bg='purple.50' h='100vh' direction='column'>
-      <Header />
+    <Flex bg='background' h='100vh' direction='column'>
+      <Header pages={PAGES} onPageChange={(page) => console.log('Page', page)}/>
       <Spacer />
       <Body whineContract={whineContract} />
       <Spacer />
