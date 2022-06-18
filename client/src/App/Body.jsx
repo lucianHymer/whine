@@ -1,42 +1,24 @@
 import React from "react";
-import MintForm from "./Body/MintForm";
 import { 
   Flex,
   Spacer,
 } from '@chakra-ui/react';
-import {
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import Routes from './Body/Routes';
 
-const UnderConstruction = () => {
-  return "Under Construction"
+const NoWallet = () => {
+  return "Please connect your MetaMask wallet";
 };
 
-const Body = ({whineContract}) => {
+const Body = (props) => {
+  const { whineContract } = props;
   return (
     <Flex>
       <Spacer />
       {
         whineContract ?
-          <Routes>
-            <Route
-              path='/mint'
-              element={<MintForm whineContract={whineContract} />}
-            />
-            <Route
-              path='/trade'
-              element={<UnderConstruction />}
-            />
-            <Route
-              path='/redeem'
-              element={<UnderConstruction />}
-            />
-            <Route path='*' element={<Navigate to='/mint' replace />} />
-          </Routes>
+          <Routes {...props} />
           :
-          "Please connect your MetaMask wallet"
+          <NoWallet {...props} />
       }
       <Spacer />
     </Flex>

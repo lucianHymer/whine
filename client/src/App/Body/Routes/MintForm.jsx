@@ -9,6 +9,7 @@ import {
   FormControl,
 } from '@chakra-ui/react';
 
+import Card from '../Card';
 import RoyaltiesField from './MintForm/RoyaltiesField';
 import VintageField from './MintForm/VintageField';
 
@@ -66,7 +67,7 @@ const MintForm = ({whineContract}) => {
   }
 
   return (
-    <Box p={5} rounded='xl' border='2px' borderColor='purple.300' width='30%' boxShadow='lg' bg='white'>
+    <Card width='30%'>
       <form align='center' onSubmit={handleSubmit}>
         <FormControl isRequired isReadOnly>
           <FormLabel requiredIndicator='' htmlFor='winery'>Winery</FormLabel>
@@ -88,7 +89,7 @@ const MintForm = ({whineContract}) => {
           Mint
         </Button>
       </form>
-    </Box>
+    </Card>
   );
 };
 
