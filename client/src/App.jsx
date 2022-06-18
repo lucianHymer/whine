@@ -49,7 +49,7 @@ const App = () => {
 
   return (
     <Flex bg='background' h='100vh' direction='column'>
-      <Header pages={PAGES} onPageChange={(page) => console.log('Page', page)}/>
+      <Header pages={PAGES} />
       <Spacer />
       <Body whineContract={whineContract} />
       <Spacer />

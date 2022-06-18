@@ -12,6 +12,7 @@ import {
 import theme from './theme';
 
 import '@fontsource/kanit/400.css'
+import '@fontsource/kanit/700.css'
 
 function getLibrary(provider) {
   return new Web3Provider(provider);

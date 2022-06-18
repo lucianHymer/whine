@@ -7,6 +7,7 @@
 - [ ] Add Whine object for viewing NFT
 - [ ] Add Whine collection viewing place
 - [ ] Add ability to mint a whole release of a wine w/ custom quantity
-- [ ] Add sections: Mint, Trade, Redeem
+- [ ] Winery reputation system
+- [x] Add sections: Mint, Trade, Redeem
 - [x] Get Pinata NFT from the backend working
 - [x] Get started with frontend/chakra

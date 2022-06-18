@@ -4,6 +4,15 @@ import {
   Flex,
   Spacer,
 } from '@chakra-ui/react';
+import {
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+
+const UnderConstruction = () => {
+  return "Under Construction"
+};
 
 const Body = ({whineContract}) => {
   return (
@@ -11,9 +20,23 @@ const Body = ({whineContract}) => {
       <Spacer />
       {
         whineContract ?
-          <MintForm whineContract={whineContract} />
+          <Routes>
+            <Route
+              path='/mint'
+              element={<MintForm whineContract={whineContract} />}
+            />
+            <Route
+              path='/trade'
+              element={<UnderConstruction />}
+            />
+            <Route
+              path='/redeem'
+              element={<UnderConstruction />}
+            />
+            <Route path='*' element={<Navigate to='/mint' replace />} />
+          </Routes>
           :
-          "Please connect your wallet"
+          "Please connect your MetaMask wallet"
       }
       <Spacer />
     </Flex>

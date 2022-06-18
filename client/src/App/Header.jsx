@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from "react";
+import React from "react";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { useWeb3React } from '@web3-react/core'
 import { 
@@ -8,8 +8,6 @@ import {
   Spacer,
   Button,
   Text,
-  useRadio,
-  useRadioGroup,
   useTheme,
   Center,
 } from "@chakra-ui/react";
@@ -20,70 +18,43 @@ const MetamaskWallet = new InjectedConnector({
   supportedChainIds: [31337],
 });
 
-// function CustomLink({ children, to, ...props }) {
-//   return (
-//     <div>
-//       <Link
-//         style={{ textDecoration: match ? "underline" : "none" }}
-//         to={to}
-//         {...props}
-//       >
-//         {children}
-//       </Link>
-//       {match && " (active)"}
-//     </div>
-//   );
-// }
 const PageLink = (props) => {
   const { url } = props;
-  const { getInputProps, getCheckboxProps } = useRadio(props);
 
-  const resolved = useResolvedPath(url);
-  const match = useMatch({ path: resolved.pathname, end: true });
-
-
-  const input = getInputProps();
-  console.log('input', input);
-  const checkbox = getCheckboxProps();
   const theme = useTheme();
+  const resolved = useResolvedPath(url);
+  const match = useMatch({path: resolved.pathname, end: true});
 
   return (
-    <Box as='label'>
-      <input {...input} />
-      <Center
-        {...checkbox}
-        minWidth={24}
-        color='foreground'
-        _checked={{
-          bg:'foreground',
-          color:'white',
-          borderWidth: theme.sizes['1'],
-          borderRadius: theme.sizes['3'],
-          borderColor: 'background',
-        }}
-        cursor='pointer'
-        h={9}
-      >
-        {props.children}
-      </Center>
-    </Box>
+    <Link to={url}>
+      <Box as='label'>
+        <Center
+          minWidth={24}
+          color='foreground'
+          cursor='pointer'
+          h={9}
+          { ...( match ?
+            {
+              bg:'foreground',
+              color:'white',
+              borderWidth: theme.sizes['1'],
+              borderRadius: theme.sizes['3'],
+              borderColor: 'background',
+            } : {})
+          }
+        >
+          {props.children}
+        </Center>
+      </Box>
+    </Link>
   );
 };
 
 const PageSwitch = (props) => {
   const {
     pages,
-    onChange,
   } = props;
 
-
-  const { getRootProps, getRadioProps } = useRadioGroup({
-    name: 'framework',
-    defaultValue: pages[0],
-    onChange: onChange,
-  });
-
-  const group = getRootProps();
 
   return (
     <HStack
@@ -93,19 +64,14 @@ const PageSwitch = (props) => {
       h={10}
       m={2}
       spacing={0}
-      {...group}
     >
       {pages.map((value, index) => {
-        const radio = getRadioProps({ value })
-
         return (
-          <Link key={value} to={`/${value.toLowerCase()}`}>
-          <PageLink key={value} url={`/${value.toLowerCase()}`} {...radio}>
+          <PageLink key={value} url={`/${value.toLowerCase()}`}>
             <Text fontSize='md' fontWeight='semibold'>
               {value}
             </Text>
           </PageLink>
-          </Link>
         );
       })}
     </HStack>
@@ -117,31 +83,31 @@ const WalletButtonText = () => {
 
   if(account)
     return (
-      <Fragment>
+      <>
         <Spacer />
         <Text color='green.300'>{"\u2B24"}</Text>
         <Spacer />
         Connected
         <Spacer />
-      </Fragment>
+      </>
     );
   else
     return (
-      <Fragment>
+      <>
         <Spacer />
         Connect Wallet
         <Spacer />
-      </Fragment>
+      </>
     );
 };
 
 const Header = (props) => {
   const { account, activate } = useWeb3React();
-  const { pages, onPageChange } = props;
+  const { pages } = props;
 
   return (
     <Flex pl={10} h="10%">
-      <PageSwitch gap={2} h={10} pages={pages} onChange={onPageChange} />
+      <PageSwitch gap={2} h={10} pages={pages} />
       <Spacer />
       <Button m={2} size='md' onClick={() => account ? "" : activate(MetamaskWallet) }>
         <Flex w="8em">
