@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { useWeb3React } from '@web3-react/core'
 import { 
-  Box,
   Button,
   Input,
   FormLabel,
   FormControl,
+  Center,
 } from '@chakra-ui/react';
 
 import Card from '../Card';
@@ -60,36 +60,43 @@ const MintForm = ({whineContract}) => {
     });
   }
 
+  let content;
   if(!loaded){
-    return "Looking for registered winery...";
+    content = "Looking for registered winery...";
   } else if(!winery){
-    return "Winery not registered";
+    content = "Winery not registered";
+  } else {
+    content = (
+      <Card h="min-content" w={['70%', '50%', '40%', '30%']}>
+        <form align='center' onSubmit={handleSubmit}>
+          <FormControl isRequired isReadOnly>
+            <FormLabel requiredIndicator='' htmlFor='winery'>Winery</FormLabel>
+            <Input id='winery' variant='filled' size='sm' value={winery} />
+          </FormControl>
+          <FormControl isRequired mt={4}>
+            <FormLabel requiredIndicator='' htmlFor='varietal'>Varietal</FormLabel>
+            <Input
+              id='varietal'
+              size='sm'
+              placeholder="Pinot Noir"
+              value={varietal}
+              onChange={(event) => setVarietal(event.target.value)}
+            />
+          </FormControl>
+          <VintageField vintage={vintage} setVintage={setVintage} />
+          <RoyaltiesField royalties={royalties} setRoyalties={setRoyalties} />
+          <Button type='submit' mt={6} size='md'>
+            Mint
+          </Button>
+        </form>
+      </Card>
+    );
   }
 
   return (
-    <Card h="min-content" w={['70%', '50%', 'null', '30%']}>
-      <form align='center' onSubmit={handleSubmit}>
-        <FormControl isRequired isReadOnly>
-          <FormLabel requiredIndicator='' htmlFor='winery'>Winery</FormLabel>
-          <Input id='winery' variant='filled' size='sm' value={winery} />
-        </FormControl>
-        <FormControl isRequired mt={4}>
-          <FormLabel requiredIndicator='' htmlFor='varietal'>Varietal</FormLabel>
-          <Input
-            id='varietal'
-            size='sm'
-            placeholder="Pinot Noir"
-            value={varietal}
-            onChange={(event) => setVarietal(event.target.value)}
-          />
-        </FormControl>
-        <VintageField vintage={vintage} setVintage={setVintage} />
-        <RoyaltiesField royalties={royalties} setRoyalties={setRoyalties} />
-        <Button type='submit' mt={6} size='md'>
-          Mint
-        </Button>
-      </form>
-    </Card>
+    <Center h='100%'>
+      {content}
+    </Center>
   );
 };
 

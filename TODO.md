@@ -1,7 +1,9 @@
 # TO-DO
-- [ ] Add Whine collection viewing place
-- [ ] Add winery register to front end
+- [ ] Get hosted and on a test net
 - [ ] Add tests for axios\_authenticator
+- [ ] Add missing tests for everything as-is
+- [ ] Make Whine collection viewing live
+- [ ] Add winery register to front end
 - [ ] Make API handlers from the frontend to the backends
 - [ ] Organize server folder
 - [ ] Add ability to mint a whole release of a wine w/ custom quantity
@@ -9,6 +11,7 @@
 - [ ] Winery reputation system
 - [ ] Swap out for graph API
 - [ ] Enable dark mode
+- [x] Add Whine collection viewing place
 - [x] Add Whine object for viewing NFT
 - [x] Add sections: Mint, Trade, Redeem
 - [x] Get Pinata NFT from the backend working

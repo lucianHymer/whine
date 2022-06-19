@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from 'axios';
 import { useWeb3React } from '@web3-react/core'
 import { 
   VStack,
@@ -9,6 +8,7 @@ import {
   Image,
   Wrap,
   WrapItem,
+  Heading,
 } from '@chakra-ui/react';
 
 import Card from "../Card";
@@ -43,10 +43,10 @@ const Whine = (props) => {
   } = props;
 
   return (
-    <Card>
+    <Card p={[1, 2, 3]}>
       <VStack>
-        <Image boxSize={52} fit='contain' src='https://gateway.pinata.cloud/ipfs/QmXVq2TDQVc4g6FzZCGXUmEu7MDkcAAGmGy83Eijnwt2mH/wineBottle.png' />
-        <HStack>
+        <Image boxSize={[28, 36, 48]} fit='contain' src='https://gateway.pinata.cloud/ipfs/QmXVq2TDQVc4g6FzZCGXUmEu7MDkcAAGmGy83Eijnwt2mH/wineBottle.png' />
+        <HStack fontSize={['xs', 'sm', 'md']}>
           <Box align='center'>
             <Label>Winery</Label>
             <Label>Vintage</Label>
@@ -80,22 +80,26 @@ const Trade = () => {
 
   useEffect(() => {
     if(chainData && account){
-      setWhineList(chainData.getWhineForAddress(account, 5));
+      setWhineList(chainData.getWhineForAddress(account, 3));
       return () => setWhineList([]);
     }
   }, [chainData, account]);
 
 
   return (
-    <Wrap overflowY="scroll">
-      {whineList.map(whine => <WrapItem>
-        <Whine
-          key={whine.id}
-          {...whine}
-          showRoyalties
-        />
-      </WrapItem>)}
-    </Wrap>
+    <VStack h="100%" w="100%">
+      <Heading mt={[0, null, null, -8]} pb={1} color='primary.main'>
+        More WHINE?
+      </Heading>
+      <Wrap overflowY="scroll" h="100%" w="100%" pb={1} px={3}>
+        {whineList.map(whine => <WrapItem key={whine.id}>
+          <Whine
+            {...whine}
+            showRoyalties
+          />
+        </WrapItem>)}
+      </Wrap>
+    </VStack>
   );
 };
 

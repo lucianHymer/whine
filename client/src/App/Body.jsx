@@ -1,28 +1,23 @@
 import React from "react";
+import Routes from './Body/Routes';
 import { 
   Center,
-  Flex,
-  Spacer,
 } from '@chakra-ui/react';
-import Routes from './Body/Routes';
 
 const NoWallet = () => {
-  return "Please connect your MetaMask wallet";
+  return (
+    <Center h="100%">
+      Please connect your MetaMask wallet
+    </Center>
+  );
 };
 
 const Body = (props) => {
   const { whineContract } = props;
-  return (
-    <Flex h='100%' align='center' direction='column'>
-      <Spacer />
-      {
-        whineContract ?
-          <Routes {...props} />
-          :
-          <NoWallet {...props} />
-      }
-      <Spacer />
-    </Flex>
+  return (whineContract ?
+    <Routes {...props} />
+    :
+    <NoWallet {...props} />
   );
 };
 
