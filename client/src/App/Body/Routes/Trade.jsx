@@ -13,7 +13,7 @@ import {
 
 import Card from "../Card";
 
-import { initializeChainData } from "Adapters/ChainData";
+import { initializeChainData } from "../../../Adapters/ChainData";
 
 const LINE_SPACING = 1;
 
