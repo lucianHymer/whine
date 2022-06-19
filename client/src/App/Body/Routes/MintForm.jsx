@@ -67,7 +67,7 @@ const MintForm = ({whineContract}) => {
   }
 
   return (
-    <Card width='30%'>
+    <Card width={['70%', '50%', 'null', '30%']}>
       <form align='center' onSubmit={handleSubmit}>
         <FormControl isRequired isReadOnly>
           <FormLabel requiredIndicator='' htmlFor='winery'>Winery</FormLabel>

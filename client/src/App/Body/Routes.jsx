@@ -4,12 +4,28 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import { faker } from "@faker-js/faker";
+
+import {
+  Heading,
+  Text,
+  VStack,
+} from "@chakra-ui/react"
 
 import MintForm from "./Routes/MintForm";
 import Trade from "./Routes/Trade";
 
 const UnderConstruction = () => {
-  return "Under Construction"
+  return (
+    <VStack>
+      <Heading>
+        Under Construction
+      </Heading>
+      <Text>
+        {faker.company.catchPhrase()}
+      </Text>
+    </VStack>
+  );
 };
 
 const Routes = (props) => {

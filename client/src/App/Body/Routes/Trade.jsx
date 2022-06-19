@@ -11,6 +11,8 @@ import {
 
 import Card from "../Card";
 
+import { initializeChainData } from "Adapters/ChainData";
+
 const LINE_SPACING = 1;
 
 const Label = (props) => {
@@ -23,7 +25,7 @@ const Label = (props) => {
 
 const Value = (props) => {
   return (
-  <Text p={LINE_SPACING} {...props}>
+  <Text whiteSpace="nowrap" p={LINE_SPACING} {...props}>
     {props.children}
   </Text>
   );
@@ -39,39 +41,57 @@ const Whine = (props) => {
   } = props;
 
   return (
-    <VStack {...props}>
-      <Image height={200} src='https://gateway.pinata.cloud/ipfs/QmXVq2TDQVc4g6FzZCGXUmEu7MDkcAAGmGy83Eijnwt2mH/wineBottle.png' />
-      <HStack>
-        <Box align='center'>
-          <Label>Winery</Label>
-          <Label>Vintage</Label>
-          <Label>Varietal</Label>
-          {showRoyalties && <Label>Royalties</Label>}
-        </Box>
-        <Box align='center'>
-          <Value>{winery}</Value>
-          <Value>{vintage}</Value>
-          <Value>{varietal}</Value>
-          {showRoyalties && <Value>{royalties}</Value>}
-        </Box>
-      </HStack>
-    </VStack>
+    <Card>
+      <VStack>
+        <Image boxSize={52} fit='contain' src='https://gateway.pinata.cloud/ipfs/QmXVq2TDQVc4g6FzZCGXUmEu7MDkcAAGmGy83Eijnwt2mH/wineBottle.png' />
+        <HStack>
+          <Box align='center'>
+            <Label>Winery</Label>
+            <Label>Vintage</Label>
+            <Label>Varietal</Label>
+            {showRoyalties && <Label>Royalties</Label>}
+          </Box>
+          <Box align='center'>
+            <Value>{winery}</Value>
+            <Value>{vintage}</Value>
+            <Value>{varietal}</Value>
+            {
+              showRoyalties &&
+                <Value>{Math.round(royalties * 100)}%</Value>
+            }
+          </Box>
+        </HStack>
+      </VStack>
+    </Card>
   );
 };
 
 const Trade = () => {
+  const { account } = useWeb3React();
+  const [ chainData, setChainData ] = useState();
+  const [ whineList, setWhineList ] = useState([]);
+
+  useEffect(() => {
+    setChainData(initializeChainData());
+    return () => setChainData(null);
+  }, []);
+
+  useEffect(() => {
+    if(chainData && account){
+      setWhineList(chainData.getWhineForAddress(account, 5));
+      return () => setWhineList([]);
+    }
+  }, [chainData, account]);
+
+
   return (
-    <Card>
-      <VStack align="left">
-        <Whine
-          winery="Lucian's Winery"
-          vintage="2021"
-          varietal="Pinot Noir"
-          royalties="3.00%"
-          showRoyalties
-        />
-      </VStack>
-    </Card>
+    <HStack>
+      {whineList.map(whine => <Whine
+        key={whine.id}
+        {...whine}
+        showRoyalties
+      />)}
+    </HStack>
   );
 };
 

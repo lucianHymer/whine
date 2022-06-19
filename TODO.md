@@ -1,15 +1,15 @@
 # TO-DO
-- [ ] Add tests for axios\_authenticator
-- [ ] Organize server folder
-- [ ] Add ability to see if NFT minted/traded off-market (maybe Graph)
-- [ ] Enable dark mode
-- [ ] Add winery register to front end
-- [ ] Add Whine object for viewing NFT
 - [ ] Add Whine collection viewing place
+- [ ] Add winery register to front end
+- [ ] Add tests for axios\_authenticator
+- [ ] Make API handlers from the frontend to the backends
+- [ ] Organize server folder
 - [ ] Add ability to mint a whole release of a wine w/ custom quantity
+- [ ] Add ability to see if NFT minted/traded off-market (maybe Graph)
 - [ ] Winery reputation system
-- [ ] Make API handlers for the frontend to the backends
 - [ ] Swap out for graph API
+- [ ] Enable dark mode
+- [x] Add Whine object for viewing NFT
 - [x] Add sections: Mint, Trade, Redeem
 - [x] Get Pinata NFT from the backend working
 - [x] Get started with frontend/chakra
