@@ -53,6 +53,7 @@ const PageLink = (props) => {
 const PageSwitch = (props) => {
   const {
     pages,
+    h,
   } = props;
 
 
@@ -61,7 +62,7 @@ const PageSwitch = (props) => {
       borderWidth={1}
       borderColor='foreground'
       borderRadius='lg'
-      h={10}
+      h={h}
       m={2}
       spacing={0}
     >
@@ -106,7 +107,7 @@ const Header = (props) => {
   const { pages } = props;
 
   return (
-    <Flex pl={10} h="10%">
+    <Flex h='100%' pl={10}>
       <PageSwitch gap={2} h={10} pages={pages} />
       <Spacer />
       <Button m={2} size='md' onClick={() => account ? "" : activate(MetamaskWallet) }>

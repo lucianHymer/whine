@@ -1,5 +1,6 @@
 import React from "react";
 import { 
+  Center,
   Flex,
   Spacer,
 } from '@chakra-ui/react';
@@ -12,7 +13,7 @@ const NoWallet = () => {
 const Body = (props) => {
   const { whineContract } = props;
   return (
-    <Flex>
+    <Flex h='100%' align='center' direction='column'>
       <Spacer />
       {
         whineContract ?

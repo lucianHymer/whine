@@ -5,8 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
 import { addAxiosAuthenticatorMiddleware } from './axios_authenticator';
 import { 
-  Flex,
-  Spacer,
+  Box,
 } from '@chakra-ui/react';
 import Body from './App/Body';
 import Header from './App/Header';
@@ -48,12 +47,14 @@ const App = () => {
   }, [error, account, chainId, library, whineContract]);
 
   return (
-    <Flex bg='background' h='100vh' direction='column'>
-      <Header pages={PAGES} />
-      <Spacer />
-      <Body whineContract={whineContract} />
-      <Spacer />
-    </Flex>
+    <Box bg='background' h='100vh'>
+      <Box h='7vh'>
+        <Header pages={PAGES} />
+      </Box>
+      <Box h='93vh'>
+        <Body whineContract={whineContract} />
+      </Box>
+    </Box>
   );
 };
 

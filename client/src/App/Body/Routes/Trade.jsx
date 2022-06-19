@@ -7,6 +7,8 @@ import {
   Text,
   Box,
   Image,
+  Wrap,
+  WrapItem,
 } from '@chakra-ui/react';
 
 import Card from "../Card";
@@ -85,13 +87,15 @@ const Trade = () => {
 
 
   return (
-    <HStack>
-      {whineList.map(whine => <Whine
-        key={whine.id}
-        {...whine}
-        showRoyalties
-      />)}
-    </HStack>
+    <Wrap overflowY="scroll">
+      {whineList.map(whine => <WrapItem>
+        <Whine
+          key={whine.id}
+          {...whine}
+          showRoyalties
+        />
+      </WrapItem>)}
+    </Wrap>
   );
 };
 
