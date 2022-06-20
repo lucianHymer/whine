@@ -50,7 +50,11 @@ const MintForm = ({whineContract}) => {
       properties: {vintage, varietal, winery}
     };
 
-    axios.post('http://localhost:3001/create_nft_metadata', {
+    const baseURL = process.env.NODE_ENV === 'development' ?
+      'http://localhost:3001' :
+      'http://whine-backend.lucianhymer.com';
+
+    axios.post(`${baseURL}/create_nft_metadata`, {
       metadata
     }).then(res => {
       console.log('res', res)
