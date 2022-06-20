@@ -1,4 +1,5 @@
 import axios from 'axios';
+import constants from 'constants';
 import { Service } from 'axios-middleware';
 
 export function addAxiosAuthenticatorMiddleware(account, library){
@@ -7,11 +8,11 @@ export function addAxiosAuthenticatorMiddleware(account, library){
   service.register({
     onRequest(config) {
       if(
-        config.url.includes("http://localhost:3001/") &&
+        config.url.includes(constants.BACKEND_URL) &&
         !config.url.includes('authentication')
       ){
         console.log('onRequest POST start');
-        return axios(`http://localhost:3001/authentication/${account}/initiate`)
+        return axios(`${constants.BACKEND_URL}/authentication/${account}/initiate`)
           .then(response => {
             const { message } = response.data;
             console.log('onRequest initate', response);

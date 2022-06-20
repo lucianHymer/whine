@@ -9,6 +9,7 @@ import {
   Center,
 } from '@chakra-ui/react';
 
+import constants from 'constants';
 import Card from '../Card';
 import RoyaltiesField from './MintForm/RoyaltiesField';
 import VintageField from './MintForm/VintageField';
@@ -50,11 +51,7 @@ const MintForm = ({whineContract}) => {
       properties: {vintage, varietal, winery}
     };
 
-    const baseURL = process.env.NODE_ENV === 'development' ?
-      'http://localhost:3001' :
-      'http://whine-backend.lucianhymer.com';
-
-    axios.post(`${baseURL}/create_nft_metadata`, {
+    axios.post(`${constants.BACKEND_URL}/create_nft_metadata`, {
       metadata
     }).then(res => {
       console.log('res', res)
