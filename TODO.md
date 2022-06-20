@@ -1,7 +1,5 @@
 # TO-DO
 - [ ] Update deploy script to not overwrite networks
-- [ ] Get client hosted
-- [ ] Get server hosted
 - [ ] Add tests for axios\_authenticator
 - [ ] Add missing tests for everything as-is
 - [ ] Make Whine collection viewing live
@@ -12,9 +10,13 @@
 - [ ] Add ability to see if NFT minted/traded off-market (maybe Graph)
 - [ ] Winery reputation system
 - [ ] Swap out for graph API
-- [ ] Enable dark mode
 - [ ] Install a linter plugin and lock down a few styles
 - [ ] Make server use IPFS directory using same method as IPFS deploy
+- [ ] Set up backend continuous deployment
+- [ ] Set up frontend continuous deployment
+- [ ] Enable dark mode
+- [x] Get client hosted
+- [x] Get server hosted
 - [x] Get contract on a test net
 - [x] Add Whine collection viewing place
 - [x] Add Whine object for viewing NFT
