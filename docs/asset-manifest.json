@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.5dc2bc37.css",
-    "main.js": "/static/js/main.5cf6f72b.js",
+    "main.js": "/static/js/main.9710d61d.js",
     "static/js/787.c4e7f8f9.chunk.js": "/static/js/787.c4e7f8f9.chunk.js",
     "static/media/kanit-all-700-normal.woff": "/static/media/kanit-all-700-normal.cd23648ff9ac43b907d8.woff",
     "static/media/kanit-all-400-normal.woff": "/static/media/kanit-all-400-normal.5647bc845c91e8af9cb2.woff",
@@ -15,11 +15,11 @@
     "static/media/kanit-vietnamese-400-normal.woff2": "/static/media/kanit-vietnamese-400-normal.cecfc82ea605111b5bb6.woff2",
     "index.html": "/index.html",
     "main.5dc2bc37.css.map": "/static/css/main.5dc2bc37.css.map",
-    "main.5cf6f72b.js.map": "/static/js/main.5cf6f72b.js.map",
+    "main.9710d61d.js.map": "/static/js/main.9710d61d.js.map",
     "787.c4e7f8f9.chunk.js.map": "/static/js/787.c4e7f8f9.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.5dc2bc37.css",
-    "static/js/main.5cf6f72b.js"
+    "static/js/main.9710d61d.js"
   ]
 }
