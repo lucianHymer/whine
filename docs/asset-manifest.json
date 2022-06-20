@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/whine/static/css/main.2cceadbb.css",
-    "main.js": "/whine/static/js/main.d419e435.js",
-    "static/js/27.95291165.chunk.js": "/whine/static/js/27.95291165.chunk.js",
+    "main.css": "/whine/static/css/main.14c43fb2.css",
+    "main.js": "/whine/static/js/main.706868d3.js",
+    "static/js/787.c4e7f8f9.chunk.js": "/whine/static/js/787.c4e7f8f9.chunk.js",
     "static/media/kanit-all-700-normal.woff": "/whine/static/media/kanit-all-700-normal.cd23648ff9ac43b907d8.woff",
     "static/media/kanit-all-400-normal.woff": "/whine/static/media/kanit-all-400-normal.5647bc845c91e8af9cb2.woff",
     "static/media/kanit-latin-ext-700-normal.woff2": "/whine/static/media/kanit-latin-ext-700-normal.13394e27c03fa7e8bbd1.woff2",
@@ -13,10 +13,13 @@
     "static/media/kanit-thai-400-normal.woff2": "/whine/static/media/kanit-thai-400-normal.2335bb66335de2d0775d.woff2",
     "static/media/kanit-vietnamese-700-normal.woff2": "/whine/static/media/kanit-vietnamese-700-normal.de00d6c5893285ae0e1c.woff2",
     "static/media/kanit-vietnamese-400-normal.woff2": "/whine/static/media/kanit-vietnamese-400-normal.cecfc82ea605111b5bb6.woff2",
-    "index.html": "/whine/index.html"
+    "index.html": "/whine/index.html",
+    "main.14c43fb2.css.map": "/whine/static/css/main.14c43fb2.css.map",
+    "main.706868d3.js.map": "/whine/static/js/main.706868d3.js.map",
+    "787.c4e7f8f9.chunk.js.map": "/whine/static/js/787.c4e7f8f9.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.2cceadbb.css",
-    "static/js/main.d419e435.js"
+    "static/css/main.14c43fb2.css",
+    "static/js/main.706868d3.js"
   ]
 }
