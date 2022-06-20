@@ -1,3 +1,4 @@
+import constants from './constants';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
@@ -5,7 +6,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Web3ReactProvider } from '@web3-react/core'
 import { Web3Provider } from "@ethersproject/providers";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, HashRouter } from "react-router-dom";
 import {
   ChakraProvider,
 } from '@chakra-ui/react';
@@ -18,14 +19,18 @@ function getLibrary(provider) {
   return new Web3Provider(provider);
 }
 
+const Router = constants.IS_GITHUB_PAGES ?
+  HashRouter :
+  BrowserRouter;
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
       <Web3ReactProvider getLibrary={getLibrary}>
-        <BrowserRouter>
+        <Router>
           <App />
-        </BrowserRouter>
+        </Router>
       </Web3ReactProvider>
     </ChakraProvider>
   </React.StrictMode>
