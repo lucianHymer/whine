@@ -15,7 +15,7 @@ import { HamburgerIcon } from "@chakra-ui/icons";
 import { Link, useResolvedPath, useMatch } from "react-router-dom";
 
 const MetamaskWallet = new InjectedConnector({
-  supportedChainIds: [31337],
+  supportedChainIds: [31337, 5],
 });
 
 const PageLink = (props) => {
