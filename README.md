@@ -46,6 +46,11 @@ which needed to be server-side to secure Pinata credentials.
 - Chakra UI
 - React Router
 - Ethers.js
+- Hosted statically in github
 ### Server Application
 - NodeJS
+- PM2
+- Nginx
+- Digital Ocean
+
 

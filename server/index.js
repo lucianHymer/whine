@@ -13,7 +13,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.ORIGIN,
   })
 );
 
@@ -73,7 +73,7 @@ app.post('/create_nft_metadata', jsonParser, verifyAuthentication, (req, res) =>
 });
 
 app.get('/', (req, res) => {
-  res.json({message: `Welcome, ${req.locals.address || "please authenticate"}`});
+  res.json({message: `Welcome, ${(req.locals || {}).address || "please authenticate"}`});
 });
 
 app.get('/authentication/:address/initiate', (req, res) => {
