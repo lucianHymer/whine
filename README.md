@@ -35,6 +35,15 @@ which needed to be server-side to secure Pinata credentials.
 - All client-side code is in `/client`.
 - All NodeJS code is in `/server`.
 
+# Roadmap
+- [x] **v0.1** Presentable versions of each page
+- [x] **v0.2** Deploying front/backend to internet and contract to live testnet
+- [ ] **v0.3** Fully implemented "demo mode" of minting and viewing NFTs
+- [ ] **v0.4** Refactor and clean up code to be fully presentable
+- [ ] **v0.5** WHINE Redemption
+- [ ] **v0.6** WHINE Platform Restriction (Graph for non-platform trades)
+- [ ] **v0.7** WHINE Winery Reputation (Contract + Graph)
+- [ ] **v1.0** Release
 # Tools
 ### Smart Contract/Blockchain
 - Solidity
@@ -46,11 +55,9 @@ which needed to be server-side to secure Pinata credentials.
 - Chakra UI
 - React Router
 - Ethers.js
-- Hosted statically in github
+- Hosted statically in github pages
 ### Server Application
 - NodeJS
 - PM2
 - Nginx
 - Digital Ocean
-
-

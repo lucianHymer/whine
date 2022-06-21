@@ -1,9 +1,11 @@
 # TO-DO
+- [ ] Add HTTPS check in github pages, instruct to view HTTP
+- [ ] Add winery register to front end
+- [ ] Add test mode check to contract and disable winery approval restrictions
 - [ ] Update deploy script to not overwrite networks
 - [ ] Add tests for axios\_authenticator
 - [ ] Add missing tests for everything as-is
 - [ ] Make Whine collection viewing live
-- [ ] Add winery register to front end
 - [ ] Make API handlers from the frontend to the backends
 - [ ] Organize server folder
 - [ ] Add ability to mint a whole release of a wine w/ custom quantity
