@@ -8,6 +8,7 @@ import {
 } from '@chakra-ui/react';
 import Body from './App/Body';
 import Header from './App/Header';
+import { MessagesProvider } from './App/Messages';
 
 const PAGES = ['Mint', 'Trade', 'Redeem']
 
@@ -46,14 +47,16 @@ const App = () => {
   }, [error, account, chainId, library, whineContract]);
 
   return (
-    <Box bg='background' h='100vh'>
-      <Box h='7vh'>
-        <Header pages={PAGES} />
+    <MessagesProvider>
+      <Box bg='background' h='100vh'>
+        <Box h='7vh'>
+          <Header pages={PAGES} />
+        </Box>
+        <Box h='93vh'>
+          <Body whineContract={whineContract} />
+        </Box>
       </Box>
-      <Box h='93vh'>
-        <Body whineContract={whineContract} />
-      </Box>
-    </Box>
+    </MessagesProvider>
   );
 };
 

@@ -7,10 +7,12 @@ import {
   Heading,
   FormHelperText,
 } from '@chakra-ui/react';
+import { useMessages } from "App/Messages";
 
 const WineryRegisterForm = (props) => {
   const { whineContract } = props;
   const [ winery, setWinery ] = useState('');
+  const messages = useMessages();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -19,7 +21,8 @@ const WineryRegisterForm = (props) => {
 
   const registerWinery = () => {
     whineContract['registerWinery(string)'](winery).catch( e => {
-      console.log(e?.error?.data?.data?.message || e?.error?.message);
+      const message = e?.error?.data?.data?.message || e?.error?.message;
+      messages.error(message);
     });
   };
 
