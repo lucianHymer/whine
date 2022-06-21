@@ -39,7 +39,7 @@ which needed to be server-side to secure Pinata credentials.
 - [x] **v0.1** Presentable versions of each page
 - [x] **v0.2** Deploying front/backend to internet and contract to live testnet
 - [ ] **v0.3** Fully implemented "demo mode" of minting and viewing NFTs
-- [ ] **v0.4** Refactor and clean up code to be fully presentable
+- [ ] **v0.4** Refactor, clean up, pick linter rules to be fully presentable
 - [ ] **v0.5** WHINE Redemption
 - [ ] **v0.6** WHINE Platform Restriction (Graph for non-platform trades)
 - [ ] **v0.7** WHINE Winery Reputation (Contract + Graph)

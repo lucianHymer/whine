@@ -1,4 +1,5 @@
 # TO-DO
+- [ ] Add loading and error alerts system to frontend
 - [ ] Add HTTPS check in github pages, instruct to view HTTP
 - [ ] Add winery register to front end
 - [ ] Add test mode check to contract and disable winery approval restrictions

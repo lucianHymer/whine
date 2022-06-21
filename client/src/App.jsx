@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Whine from "./contracts/Whine.sol/Whine.json";
-import WhineNetworks from "./contracts/Whine.sol/network.json";
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
 import { addAxiosAuthenticatorMiddleware } from './axios_authenticator';
@@ -30,7 +29,7 @@ const App = () => {
         console.log('library', library);
 
         // Get the contract instance.
-        const deployedNetwork = WhineNetworks.networks[chainId];
+        const deployedNetwork = Whine.networks[chainId];
         setWhineContract(new ethers.Contract(
           deployedNetwork.address,
           Whine.abi,

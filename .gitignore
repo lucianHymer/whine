@@ -25,3 +25,5 @@ cache
 artifacts
 
 secrets
+
+client/src/contracts
