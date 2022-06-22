@@ -11,6 +11,7 @@ import {
 import constants from 'constants';
 import RoyaltiesField from './MintForm/RoyaltiesField';
 import VintageField from './MintForm/VintageField';
+import { useMessages } from 'Messages';
 
 const MintForm = (props) => {
   const { whineContract, winery } = props;
@@ -18,6 +19,7 @@ const MintForm = (props) => {
   const [ varietal, setVarietal ] = useState('');
   const [ vintage, setVintage ] = useState(new Date().getUTCFullYear());
   const [ royalties, setRoyalties ] = useState('3.00');
+  const Messages = useMessages();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -37,8 +39,12 @@ const MintForm = (props) => {
       metadata
     }).then(res => {
       console.log('res', res)
-      whineContract.mintNft(account, res.data.ipfsHash, parseInt(parseFloat(royalties)*100))
+      return whineContract.mintNft(account, res.data.ipfsHash, parseInt(parseFloat(royalties)*100))
     }).catch(e => {
+      Messages.error({
+        title: 'Error creating NFT',
+        description: e?.error?.data?.message,
+      });
       console.log('Error creating NFT', e)
     });
   }

@@ -7,7 +7,7 @@ import {
   Heading,
   FormHelperText,
 } from '@chakra-ui/react';
-import { useMessages } from "App/Messages";
+import { useMessages } from "Messages";
 
 const WineryRegisterForm = (props) => {
   const { whineContract } = props;

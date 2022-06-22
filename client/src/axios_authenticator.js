@@ -2,7 +2,7 @@ import axios from 'axios';
 import constants from 'constants';
 import { Service } from 'axios-middleware';
 
-export function addAxiosAuthenticatorMiddleware(account, library){
+export function addAxiosAuthenticatorMiddleware(account, library, errorHandler){
   const service = new Service(axios);
 
   service.register({
@@ -27,6 +27,7 @@ export function addAxiosAuthenticatorMiddleware(account, library){
             return config;
           }).catch(e => {
             console.log('Auth error', e);
+            if(errorHandler) errorHandler(e);
           });
       } else {
         console.log('onRequest GET', config);

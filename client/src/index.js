@@ -11,6 +11,7 @@ import {
   ChakraProvider,
 } from '@chakra-ui/react';
 import theme from './theme';
+import { MessagesProvider } from './Messages';
 
 import '@fontsource/kanit/400.css'
 import '@fontsource/kanit/700.css'
@@ -26,13 +27,15 @@ const Router = constants.IS_GITHUB_PAGES ?
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ChakraProvider theme={theme}>
-      <Web3ReactProvider getLibrary={getLibrary}>
-        <Router>
-          <App />
-        </Router>
-      </Web3ReactProvider>
-    </ChakraProvider>
+    <MessagesProvider>
+      <ChakraProvider theme={theme}>
+        <Web3ReactProvider getLibrary={getLibrary}>
+          <Router>
+            <App />
+          </Router>
+        </Web3ReactProvider>
+      </ChakraProvider>
+    </MessagesProvider>
   </React.StrictMode>
 );
 

@@ -33,15 +33,15 @@ const Mint = ({whineContract}) => {
     content = "Looking for registered winery...";
   } else {
     let component;
-    if(true || !winery){
-      component = <WineryRegisterForm whineContract={whineContract} />;
-    } else {
+    if(winery){
       component = (
         <MintForm
           whineContract={whineContract}
           winery={winery}
         />
       );
+    } else {
+      component = <WineryRegisterForm whineContract={whineContract} />;
     }
     content = (
       <Card h="min-content" w={['70%', '50%', '40%', '30%']}>

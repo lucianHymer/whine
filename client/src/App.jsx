@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react';
 import Body from './App/Body';
 import Header from './App/Header';
-import { MessagesProvider } from './App/Messages';
+import { useMessages } from 'Messages';
 
 const PAGES = ['Mint', 'Trade', 'Redeem']
 
@@ -23,16 +23,22 @@ const App = () => {
   const [ whineContract, setWhineContract ] = useState();
   const previousAccount = usePrevious(account);
   const previousChainId = usePrevious(chainId);
+  const messages = useMessages();
 
   useEffect( () => {
     // TODO see what happens with this when switching accounts
-    if(account)
-      addAxiosAuthenticatorMiddleware(account, library);
-  }, [account, library]);
+    if(account){
+      addAxiosAuthenticatorMiddleware(account, library, (error) => {
+        messages.error({title: "Auth Error", description: error?.error?.message})
+      });
+    }
+  }, [account, library, messages]);
 
   useEffect( () => {
     try {
       if(error) console.log(error);
+      // Probably want to get rid of this IF stuff and
+      // make this happen any time the web3react stuff changes
       if(library && (
         !whineContract || (
           account !== previousAccount ||
@@ -58,7 +64,6 @@ const App = () => {
   }, [error, account, chainId, library, whineContract, previousAccount, previousChainId]);
 
   return (
-    <MessagesProvider>
       <Box bg='background' h='100vh'>
         <Box h='7vh'>
           <Header pages={PAGES} />
@@ -67,7 +72,6 @@ const App = () => {
           <Body whineContract={whineContract} />
         </Box>
       </Box>
-    </MessagesProvider>
   );
 };
 
