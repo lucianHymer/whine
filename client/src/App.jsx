@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Whine from "./contracts/Whine.sol/Whine.json";
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
@@ -12,11 +12,20 @@ import { MessagesProvider } from './App/Messages';
 
 const PAGES = ['Mint', 'Trade', 'Redeem']
 
+const usePrevious = (value) => {
+  const ref = useRef();
+  useEffect( () => { ref.current = value });
+  return ref.current;
+};
+
 const App = () => {
   const { account, chainId, library, error } = useWeb3React();
   const [ whineContract, setWhineContract ] = useState();
+  const previousAccount = usePrevious(account);
+  const previousChainId = usePrevious(chainId);
 
   useEffect( () => {
+    // TODO see what happens with this when switching accounts
     if(account)
       addAxiosAuthenticatorMiddleware(account, library);
   }, [account, library]);
@@ -24,12 +33,14 @@ const App = () => {
   useEffect( () => {
     try {
       if(error) console.log(error);
-
-      if(library && !whineContract){
+      if(library && (
+        !whineContract || (
+          account !== previousAccount ||
+          chainId !== previousChainId
+        ))) {
         console.log('Account', account);
         console.log('library', library);
 
-        // Get the contract instance.
         const deployedNetwork = Whine.networks[chainId];
         setWhineContract(new ethers.Contract(
           deployedNetwork.address,
@@ -44,7 +55,7 @@ const App = () => {
       );
       console.error(error);
     }
-  }, [error, account, chainId, library, whineContract]);
+  }, [error, account, chainId, library, whineContract, previousAccount, previousChainId]);
 
   return (
     <MessagesProvider>

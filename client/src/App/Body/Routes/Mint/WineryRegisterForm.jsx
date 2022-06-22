@@ -22,7 +22,7 @@ const WineryRegisterForm = (props) => {
   const registerWinery = () => {
     whineContract['registerWinery(string)'](winery).catch( e => {
       const message = e?.error?.data?.data?.message || e?.error?.message;
-      messages.error(message);
+      messages.error({description: message});
     });
   };
 

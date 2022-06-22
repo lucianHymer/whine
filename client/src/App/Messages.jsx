@@ -1,32 +1,24 @@
 import React, { useContext, createContext } from "react";
 import { useToast } from "@chakra-ui/react";
 
-const genError = (toast) => (message) => {
+const genToast = (toast, type, defaultTitle) => (props) =>
   toast({
-    title: "Error",
-    description: message,
-    status: "error",
     duration: 5000,
     isClosable: true,
+    title: defaultTitle,
+    status: type,
+    ...props,
   });
-};
-
-const genInfo = (toast) => (message) => {
-  toast({
-    title: message,
-    status: "info",
-    duration: 5000,
-    isClosable: true,
-  });
-};
 
 const Messages = createContext({});
 
 const MessagesProvider = (props) => {
   const toast = useToast();
   const value = {
-    error: genError(toast),
-    info: genInfo(toast),
+    error: genToast(toast, 'error', 'Error'),
+    info: genToast(toast, 'info', 'Info'),
+    warning: genToast(toast, 'warning', 'Warning'),
+    success: genToast(toast, 'success', 'Success'),
   };
   return (
     <Messages.Provider value={value}>
