@@ -41,7 +41,12 @@ const Mint = ({whineContract}) => {
         />
       );
     } else {
-      component = <WineryRegisterForm whineContract={whineContract} />;
+      component = (
+        <WineryRegisterForm
+          whineContract={whineContract}
+          setWinery={setWinery}
+        />
+      );
     }
     content = (
       <Card h="min-content" w={['70%', '50%', '40%', '30%']}>

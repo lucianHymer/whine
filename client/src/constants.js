@@ -8,9 +8,16 @@ const constants = [{
   name: "IS_GITHUB_PAGES",
   prod: true,
   devl: false,
-}].reduce((constants, {name, prod, devl}) => ({
-  ...constants,
-  [name]: isDevelopment ? devl : prod
-}), {});
+},{
+  name: "DEMO",
+  prod: process.env.DEMO,
+}].reduce((constants, constant) => {
+  const {name, prod, devl} = constant;
+  const useDevVal = isDevelopment && constant.hasOwnProperty('devl');
+  return ({
+    ...constants,
+    [name]: useDevVal ? devl : prod
+  });
+}, {});
 
 export default constants;

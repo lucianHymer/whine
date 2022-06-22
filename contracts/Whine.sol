@@ -8,6 +8,8 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "hardhat/console.sol";
 
+bool constant DEMO = true;
+
 contract Whine is ERC721URIStorage, AccessControl, ERC2981 {
   /**
    * @dev Emitted when royalties are paid to `to` from the sale of `tokenId`
@@ -48,6 +50,12 @@ contract Whine is ERC721URIStorage, AccessControl, ERC2981 {
     ownerTakeBasis = _ownerTakeBasis;
   }
 
+  modifier onlyRoleDemoExcluded(bytes32 role) {
+    if(!DEMO)
+      _checkRole(role);
+    _;
+  }
+
   function getRegisteredWineryName(address wallet) public view returns (string memory) {
     console.log('getRWN', wallet);
     string memory name = registeredWineryName[wallet];
@@ -61,19 +69,27 @@ contract Whine is ERC721URIStorage, AccessControl, ERC2981 {
   }
 
   function registerWinery(address wallet, string calldata name) public {
-    require(bytes(registeredWineryName[wallet]).length == 0, "Winery address already registered");
+    // require(bytes(registeredWineryName[wallet]).length == 0, "Winery address already registered");
     console.log('REGISTER', wallet);
     registeredWineryName[wallet] = name;
     emit RegisterWinery(wallet);
+    if(DEMO) {
+      approveWinery(wallet);
+    }
   }
 
   function registerWinery(string calldata name) external {
     registerWinery(msg.sender, name);
   }
 
-  function approveWinery(address wallet) external onlyRole(DEFAULT_ADMIN_ROLE) {
+  function approveWinery(address wallet) public onlyRoleDemoExcluded(DEFAULT_ADMIN_ROLE) {
     require(bytes(registeredWineryName[wallet]).length != 0, "Winery not registered");
-    grantRole(WINERY_ROLE, wallet);
+    if(DEMO) {
+      _grantRole(WINERY_ROLE, wallet);
+    } else {
+      grantRole(WINERY_ROLE, wallet);
+    }
+
     console.log('APPROVE', wallet);
     emit ApproveWinery(wallet);
   }
