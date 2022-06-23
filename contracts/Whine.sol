@@ -69,6 +69,7 @@ contract Whine is ERC721URIStorage, AccessControl, ERC2981 {
   }
 
   function registerWinery(address wallet, string calldata name) public {
+    // TODO uncomment after testing
     // require(bytes(registeredWineryName[wallet]).length == 0, "Winery address already registered");
     console.log('REGISTER', wallet);
     registeredWineryName[wallet] = name;

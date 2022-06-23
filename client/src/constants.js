@@ -9,6 +9,9 @@ const constants = [{
   prod: true,
   devl: false,
 },{
+  name: "ZERO_ADDRESS",
+  prod: '0x0000000000000000000000000000000000000000',
+},{
   name: "DEMO",
   prod: process.env.DEMO,
 }].reduce((constants, constant) => {

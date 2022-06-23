@@ -1,5 +1,5 @@
 # TO-DO
-- [ ] Add loading and error alerts system to frontend
+- [ ] Add top-level error boundary
 - [ ] Add HTTPS check in github pages, instruct to view HTTP
 - [ ] Add winery register to front end
 - [ ] Add test mode check to contract and disable winery approval restrictions
@@ -7,6 +7,7 @@
 - [ ] Add tests for axios\_authenticator
 - [ ] Add missing tests for everything as-is
 - [ ] Make Whine collection viewing live
+- [ ] Add admin page - approve wineries
 - [ ] Make API handlers from the frontend to the backends
 - [ ] Organize server folder
 - [ ] Add ability to mint a whole release of a wine w/ custom quantity
@@ -18,6 +19,8 @@
 - [ ] Set up backend continuous deployment
 - [ ] Set up frontend continuous deployment
 - [ ] Enable dark mode
+- [x] Add messaging system
+- [x] Add loading animation that listens for events
 - [x] Get client hosted
 - [x] Get server hosted
 - [x] Get contract on a test net

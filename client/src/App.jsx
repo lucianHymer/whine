@@ -28,9 +28,16 @@ const App = () => {
   useEffect( () => {
     // TODO see what happens with this when switching accounts
     if(account){
-      addAxiosAuthenticatorMiddleware(account, library, (error) => {
-        messages.error({title: "Auth Error", description: error?.error?.message})
-      });
+      addAxiosAuthenticatorMiddleware(account, library, (errorMessage) => {
+        messages.error({
+          title: "Auth Error",
+          description: errorMessage,
+        });
+      }, () => {
+        messages.info({
+          title: "Please Approve MetaMask Signature",
+          description: "This allows for anonymous, secure authentication with our backend",
+          duration: 20000, }); });
     }
   }, [account, library, messages]);
 
@@ -64,14 +71,14 @@ const App = () => {
   }, [error, account, chainId, library, whineContract, previousAccount, previousChainId]);
 
   return (
-      <Box bg='background' h='100vh'>
-        <Box h='7vh'>
-          <Header pages={PAGES} />
-        </Box>
-        <Box h='93vh'>
-          <Body whineContract={whineContract} />
-        </Box>
+    <Box bg='background' h='100vh'>
+      <Box h='7vh'>
+        <Header pages={PAGES} />
       </Box>
+      <Box h='93vh'>
+        <Body whineContract={whineContract} />
+      </Box>
+    </Box>
   );
 };
 
