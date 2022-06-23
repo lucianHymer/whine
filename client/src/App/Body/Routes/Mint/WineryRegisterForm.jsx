@@ -9,6 +9,7 @@ import {
 } from '@chakra-ui/react';
 import { useMessages } from "Messages";
 import LoadButton from "App/Body/LoadButton";
+import { useEventListener } from "App/Contract";
 
 const WineryRegisterForm = (props) => {
   const { whineContract, setWinery } = props;
@@ -16,6 +17,7 @@ const WineryRegisterForm = (props) => {
   const [ wineryInput, setWineryInput ] = useState('');
   const [ pending, setPending ] = useState(false);
   const messages = useMessages();
+  const listen = useEventListener();
 
   const handleSubmit = (event) => {
     setPending(true);
@@ -24,15 +26,13 @@ const WineryRegisterForm = (props) => {
   };
 
   const registerWinery = () => {
-    const filter = whineContract.filters.RegisterWinery(account);
-    filter.fromBlock = 'latest';
-    whineContract.once(filter, (wallet, event) => {
-      console.log('Once', wallet, event);
-      setWinery(wineryInput);
+    whineContract['registerWinery(string)'](wineryInput).then( r=> {
+      const filter = whineContract.filters.RegisterWinery(account);
+      return listen(whineContract, filter)
+    }).then( (wallet, event) => {
       setPending(false);
-    });
-
-    whineContract['registerWinery(string)'](wineryInput).catch( e => {
+      setWinery(wineryInput);
+    }).catch( e => {
       const message = (
         e?.error?.data?.data?.message ||
         e?.error?.message ||
