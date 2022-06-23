@@ -7,7 +7,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-const defaultPendingMessage = "Please approve transaction in your wallet, then wait for it to be processed";
+const defaultPendingMessage = "Please approve the transaction in your wallet, then wait for it to be processed";
 
 const LoadButton = (props) => {
   const {

@@ -8,10 +8,10 @@ const useEventListener = () => {
     // in production. Seems to be a hardhat issue
     return new Promise( r => {
       library.once("block", (num) => {
-        contract.on(filter, (...values) => {
-          const event = values[values.length - 1];
+        contract.on(filter, (...eventArgs) => {
+          const event = eventArgs[eventArgs.length - 1];
           if(event.blockNumber <= num) return;
-          r(...values);
+          r(eventArgs);
         });
       });
     });

@@ -29,7 +29,7 @@ const WineryRegisterForm = (props) => {
     whineContract['registerWinery(string)'](wineryInput).then( r=> {
       const filter = whineContract.filters.RegisterWinery(account);
       return listen(whineContract, filter)
-    }).then( (wallet, event) => {
+    }).then( ([wallet, event]) => {
       setPending(false);
       setWinery(wineryInput);
     }).catch( e => {
@@ -67,6 +67,7 @@ const WineryRegisterForm = (props) => {
         )}
       </FormControl>
       <LoadButton
+        mt={4}
         buttonText='Register'
         pending={pending}
       />

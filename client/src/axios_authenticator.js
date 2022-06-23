@@ -3,6 +3,8 @@ import constants from 'constants';
 import { Service } from 'axios-middleware';
 
 // TODO add cancellation of orig request on auth failure
+// TODO cancel toast on sign/reject
+// TODO Add a "I see that you rejected" message on reject
 
 export function addAxiosAuthenticatorMiddleware(account, library, errorHandler, signAlertHandler){
   const service = new Service(axios);
@@ -29,7 +31,6 @@ export function addAxiosAuthenticatorMiddleware(account, library, errorHandler, 
             console.log('onRequest POST', config);
             return config;
           }).catch(e => {
-            // Add a "I see that you rejected" message on reject
             console.log('Auth error', e);
             errorHandler(e.message);
             return config;
