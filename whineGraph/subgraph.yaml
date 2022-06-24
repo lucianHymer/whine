@@ -1,0 +1,26 @@
+specVersion: 0.0.4
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Whine
+    network: goerli
+    source:
+      address: "0x4953BB773E1c21e8a263B090B112350eC04dA4DE"
+      abi: Whine
+      startBlock: 7110753
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Whine
+        - User
+        - Transfer
+      abis:
+        - name: Whine
+          file: ./abis/Whine.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/whine.ts
