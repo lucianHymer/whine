@@ -11,7 +11,7 @@ import constants from 'constants';
 import RoyaltiesField from './MintForm/RoyaltiesField';
 import VintageField from './MintForm/VintageField';
 import { useMessages } from 'Messages';
-import LoadButton from "App/Body/LoadButton";
+import LoadButton, { useLoadButtonReducer } from "App/Body/LoadButton";
 import { useEventListener } from "App/Contract";
 
 const MintForm = (props) => {
@@ -20,7 +20,7 @@ const MintForm = (props) => {
   const [ varietal, setVarietal ] = useState('');
   const [ vintage, setVintage ] = useState(new Date().getUTCFullYear());
   const [ royalties, setRoyalties ] = useState('3.00');
-  const [ pendingInfo, setPendingInfo ] = useState({
+  const [ loadButtonProps, setLoadButtonState ] = useLoadButtonReducer({
     showButton: true,
     showSpinner: false,
     buttonText: 'Mint',
@@ -30,10 +30,10 @@ const MintForm = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setPendingInfo({
+    setLoadButtonState({
       showButton: false,
       showSpinner: true,
-      message: "Approve the signature in your wallet to authenticate your request",
+      message: "Approve the signature in your wallet to authenticate your request (Step 1 of 2)",
     });
     console.log('Submitted');
     mintNft();
@@ -52,37 +52,29 @@ const MintForm = (props) => {
         description: e?.error?.data?.message || e?.message,
       });
       console.log('Error creating NFT', e)
-      setPendingInfo({
-        showButton: true,
-        showSpinner: false,
-        buttonText: 'Mint',
-      });
+      setLoadButtonState({reset: true});
     };
 
     axios.post(`${constants.BACKEND_URL}/create_nft_metadata`, {
       metadata
     }).then(res => {
-      setPendingInfo({
+      setLoadButtonState({
         showSpinner: true,
         showButton: true,
         message: 'Click Next to finalize minting',
         buttonText: 'Next',
         callback: () => {
-          setPendingInfo({
+          setLoadButtonState({
             showSpinner: true,
             showButton: false,
-            message: "Approve the transaction in your wallet, then wait for it to go through",
+            message: "Approve the transaction in your wallet, then wait for it to go through (Step 2 of 2)",
           });
           whineContract.mintNft(account, res.data.ipfsHash, parseInt(parseFloat(royalties)*100)).then(res => {
             const filter = whineContract.filters.Transfer(constants.ZERO_ADDRESS, account);
             return listen(whineContract, filter)
           }).then( ([from, to, val, event]) => {
             console.log('Listened', from, to, val, event);
-            setPendingInfo({
-              showButton: true,
-              showSpinner: false,
-              buttonText: 'Mint',
-            });
+            setLoadButtonState({reset: true});
             Messages.success({title: "Successfully minted some WHINE"});
           }).catch(handleError);
         },
@@ -110,12 +102,7 @@ const MintForm = (props) => {
       <RoyaltiesField royalties={royalties} setRoyalties={setRoyalties} />
       <LoadButton
         mt={6}
-        showSpinner={pendingInfo.showSpinner}
-        showButton={pendingInfo.showButton}
-        stage={pendingInfo.stage}
-        message={pendingInfo.message}
-        buttonText={pendingInfo.buttonText}
-        callback={pendingInfo.callback}
+        {...loadButtonProps}
       />
     </form>
   );

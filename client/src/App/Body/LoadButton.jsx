@@ -8,39 +8,49 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-const stageReducer = (state, action) => {
-  let stageCount = state.stageCount;
-  switch (action) {
-    case 'next':
-      stageCount++;
-    case 'previous':
-      stageCount--;
-    case 'reset':
-      stageCount = 0;
-    default:
-      throw new Error(`Invalid dispatch ${dispatch}`);
-  };
-
+const makeInitialState = (initialProps) => {
   return {
-    stageCount, stages,
-    stage: stages[stageCount],
+    initialProps,
+    props: initialProps,
   };
 };
 
-const useMultiStageLoadButton = (stages) => {
-  const [state, dispatch] = useReducer(stageReducer, {stages});
-  useEffect( () => dispatch('reset'), [] );
+const stageReducer = (state, dispatch) => {
+  const {
+    reset,
+    ...rest
+  } = dispatch;
+
+  const {
+    initialProps
+  } = state;
+
+  if(reset)
+    return makeInitialState(initialProps);
 
   return {
-    currentProps: state.stage,
-    dispatch,
+    initialProps,
+    props: rest,
   };
+};
+
+export const useLoadButtonReducer = (initialProps) => {
+  const [state, dispatch] = useReducer(
+    stageReducer, 
+    makeInitialState(initialProps)
+  );
+
+  return [
+    state.props,
+    dispatch,
+  ];
 };
 
 const LoadButton = (props) => {
   const {
     showSpinner,
     showButton,
+    hideMessage,
     message,
     buttonText,
     callback,
@@ -61,7 +71,7 @@ const LoadButton = (props) => {
         color='primary.main'
         emptyColor='primary.100'
       />}
-      {message && <Text mb={4}>{message}</Text>}
+      {!hideMessage && message && <Text mb={4}>{message}</Text>}
       {showButton &&
         <Button {...buttonProps} size='md'>
           {buttonText}

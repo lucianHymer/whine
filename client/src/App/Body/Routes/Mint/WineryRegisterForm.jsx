@@ -68,8 +68,11 @@ const WineryRegisterForm = (props) => {
       </FormControl>
       <LoadButton
         mt={4}
-        buttonText='Register'
-        pending={pending}
+        showButton={!pending}
+        hideMessage={!pending}
+        showSpinner={pending}
+        buttonText="Register"
+        message="Approve the transaction in your wallet, then wait for it to go through"
       />
     </form>
   );
