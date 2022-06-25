@@ -9,6 +9,9 @@ const constants = [{
   prod: true,
   devl: false,
 },{
+  name: "HARDHAT_CHAIN_ID",
+  prod: 31337,
+},{
   name: "ZERO_ADDRESS",
   prod: '0x0000000000000000000000000000000000000000',
 },{

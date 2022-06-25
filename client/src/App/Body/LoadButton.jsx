@@ -1,8 +1,7 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useReducer } from "react";
 
 import { 
   VStack,
-  Box,
   Button,
   Spinner,
   Text,

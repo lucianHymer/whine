@@ -649,13 +649,21 @@ export class Whine extends Entity {
     }
   }
 
-  get vintage(): i32 {
+  get vintage(): string | null {
     let value = this.get("vintage");
-    return value!.toI32();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
   }
 
-  set vintage(value: i32) {
-    this.set("vintage", Value.fromI32(value));
+  set vintage(value: string | null) {
+    if (!value) {
+      this.unset("vintage");
+    } else {
+      this.set("vintage", Value.fromString(<string>value));
+    }
   }
 
   get varietal(): string | null {

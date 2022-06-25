@@ -2,7 +2,7 @@ specVersion: 0.0.4
 features:
   - ipfsOnEthereumContracts
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: Whine
@@ -10,7 +10,6 @@ dataSources:
     source:
       address: "0x4953BB773E1c21e8a263B090B112350eC04dA4DE"
       abi: Whine
-      # startBlock: 7110753
       startBlock: 7116578
     mapping:
       kind: ethereum/events
@@ -22,8 +21,8 @@ dataSources:
         - Transfer
       abis:
         - name: Whine
-          file: ./abis/Whine.json
+          file: Whine/abis/Whine.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-      file: ./src/whine.ts
+      file: Whine/Whine.wasm
