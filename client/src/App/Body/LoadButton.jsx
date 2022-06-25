@@ -1,37 +1,74 @@
-import React from "react";
+import React, { useEffect, useReducer } from "react";
 
 import { 
+  VStack,
   Box,
   Button,
   Spinner,
   Text,
 } from '@chakra-ui/react';
 
-const defaultPendingMessage = "Please approve the transaction in your wallet, then wait for it to be processed";
+const stageReducer = (state, action) => {
+  let stageCount = state.stageCount;
+  switch (action) {
+    case 'next':
+      stageCount++;
+    case 'previous':
+      stageCount--;
+    case 'reset':
+      stageCount = 0;
+    default:
+      throw new Error(`Invalid dispatch ${dispatch}`);
+  };
+
+  return {
+    stageCount, stages,
+    stage: stages[stageCount],
+  };
+};
+
+const useMultiStageLoadButton = (stages) => {
+  const [state, dispatch] = useReducer(stageReducer, {stages});
+  useEffect( () => dispatch('reset'), [] );
+
+  return {
+    currentProps: state.stage,
+    dispatch,
+  };
+};
 
 const LoadButton = (props) => {
   const {
-    pending,
-    pendingMessage,
+    showSpinner,
+    showButton,
+    message,
     buttonText,
+    callback,
     ...rest
   } = props;
 
-  let component;
-  if(pending)
-     component = (
-       <Box {...rest}>
-         <Text>{pendingMessage || defaultPendingMessage}</Text>
-         <Spinner size='lg' mt={4} color='primary.main' emptyColor='primary.100' />
-       </Box>
-     );
-  else
-    component = (
-      <Button type='submit' size='md' {...rest}>
-        {buttonText}
-      </Button>
-    );
-  return component;
+  const buttonProps = callback ?  {
+    onClick: callback
+  } : {
+    type: 'submit'
+  };
+
+  return (
+    <VStack {...rest}>
+      {showSpinner && <Spinner
+        size='lg'
+        mb={4}
+        color='primary.main'
+        emptyColor='primary.100'
+      />}
+      {message && <Text mb={4}>{message}</Text>}
+      {showButton &&
+        <Button {...buttonProps} size='md'>
+          {buttonText}
+        </Button>
+      }
+    </VStack>
+  );
 };
 
 export default LoadButton;

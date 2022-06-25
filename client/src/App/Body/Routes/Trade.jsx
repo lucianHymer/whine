@@ -40,12 +40,19 @@ const Whine = (props) => {
     vintage,
     royalties,
     showRoyalties,
+    image,
   } = props;
+
+  const imageSrc =`https://gateway.pinata.cloud/ipfs/${image.replace(/^\s*ipfs:\/\//,'')}`;
 
   return (
     <Card p={[1, 2, 3]}>
       <VStack>
-        <Image boxSize={[28, 36, 48]} fit='contain' src='https://gateway.pinata.cloud/ipfs/QmXVq2TDQVc4g6FzZCGXUmEu7MDkcAAGmGy83Eijnwt2mH/wineBottle.png' />
+        <Image
+          boxSize={[28, 36, 48]}
+          fit='contain'
+          src={imageSrc}
+        />
         <HStack fontSize={['xs', 'sm', 'md']}>
           <Box align='center'>
             <Label>Winery</Label>

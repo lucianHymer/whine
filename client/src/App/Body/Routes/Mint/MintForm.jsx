@@ -20,13 +20,21 @@ const MintForm = (props) => {
   const [ varietal, setVarietal ] = useState('');
   const [ vintage, setVintage ] = useState(new Date().getUTCFullYear());
   const [ royalties, setRoyalties ] = useState('3.00');
-  const [ pending, setPending ] = useState(false);
+  const [ pendingInfo, setPendingInfo ] = useState({
+    showButton: true,
+    showSpinner: false,
+    buttonText: 'Mint',
+  });
   const Messages = useMessages();
   const listen = useEventListener();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setPending(true);
+    setPendingInfo({
+      showButton: false,
+      showSpinner: true,
+      message: "Approve the signature in your wallet to authenticate your request",
+    });
     console.log('Submitted');
     mintNft();
   };
@@ -36,28 +44,51 @@ const MintForm = (props) => {
       name: "Whine",
       description: "A Whine token redeemable for 1 wine bottle",
       image: "ipfs://QmXVq2TDQVc4g6FzZCGXUmEu7MDkcAAGmGy83Eijnwt2mH/wineBottle.png",
-      properties: {vintage, varietal, winery}
+      properties: {vintage: `${vintage}`, varietal, winery}
     };
-    axios.post(`${constants.BACKEND_URL}/create_nft_metadata`, {
-      metadata
-    }).then(res => {
-      return whineContract.mintNft(account, res.data.ipfsHash, parseInt(parseFloat(royalties)*100));
-    }).then(res => {
-      const filter = whineContract.filters.Transfer(constants.ZERO_ADDRESS, account);
-      return listen(whineContract, filter)
-    }).then( ([from, to, val, event]) => {
-      console.log('Listened', from, to, val, event);
-      setPending(false);
-      Messages.success({title: "Successfully minted some WHINE"});
-    }).catch(e => {
+    const handleError = (e) => {
       Messages.error({
         title: 'Error creating NFT',
         description: e?.error?.data?.message || e?.message,
       });
       console.log('Error creating NFT', e)
-      setPending(false);
-    });
-  }
+      setPendingInfo({
+        showButton: true,
+        showSpinner: false,
+        buttonText: 'Mint',
+      });
+    };
+
+    axios.post(`${constants.BACKEND_URL}/create_nft_metadata`, {
+      metadata
+    }).then(res => {
+      setPendingInfo({
+        showSpinner: true,
+        showButton: true,
+        message: 'Click Next to finalize minting',
+        buttonText: 'Next',
+        callback: () => {
+          setPendingInfo({
+            showSpinner: true,
+            showButton: false,
+            message: "Approve the transaction in your wallet, then wait for it to go through",
+          });
+          whineContract.mintNft(account, res.data.ipfsHash, parseInt(parseFloat(royalties)*100)).then(res => {
+            const filter = whineContract.filters.Transfer(constants.ZERO_ADDRESS, account);
+            return listen(whineContract, filter)
+          }).then( ([from, to, val, event]) => {
+            console.log('Listened', from, to, val, event);
+            setPendingInfo({
+              showButton: true,
+              showSpinner: false,
+              buttonText: 'Mint',
+            });
+            Messages.success({title: "Successfully minted some WHINE"});
+          }).catch(handleError);
+        },
+      });
+    }).catch(handleError);
+  };
 
   return (
     <form align='center' onSubmit={handleSubmit}>
@@ -79,8 +110,12 @@ const MintForm = (props) => {
       <RoyaltiesField royalties={royalties} setRoyalties={setRoyalties} />
       <LoadButton
         mt={6}
-        buttonText='Mint'
-        pending={pending}
+        showSpinner={pendingInfo.showSpinner}
+        showButton={pendingInfo.showButton}
+        stage={pendingInfo.stage}
+        message={pendingInfo.message}
+        buttonText={pendingInfo.buttonText}
+        callback={pendingInfo.callback}
       />
     </form>
   );
