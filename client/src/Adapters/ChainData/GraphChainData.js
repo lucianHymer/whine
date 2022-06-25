@@ -1,13 +1,30 @@
+import axios from 'axios';
+
 const GraphChainData = {
-  getWhineForAddress: (address, limit) => {
-    return times(limit || 5)(() => ({
-      id: faker.random.numeric(4),
-      winery: whineBS(),
-      vintage: faker.date.past().getFullYear(),
-      varietal: whineBS(),
-      royalties: (Math.random() * .5),
-      image: 'ipfs://QmXVq2TDQVc4g6FzZCGXUmEu7MDkcAAGmGy83Eijnwt2mH/wineBottle.png',
-    }));
+  getWhineForAddress: async (address, limit) => {
+    const response = await axios.post(
+      'https://api.thegraph.com/subgraphs/name/lucianhymer/whine',
+      {
+        query: `
+          {
+            users (where: {id: "${address.toLowerCase()}"}) {
+              id
+              Whines (orderBy: tokenID ${limit && `first: ${limit}`}) {
+                id
+                tokenID
+                tokenURI
+                image
+                winery
+                vintage
+                varietal
+              }
+            }
+          }
+        `
+      }
+    );
+    console.log('whines', ((response?.data?.data?.users || [])[0] || {}).Whines || []);
+    return ((response?.data?.data?.users || [])[0] || {}).Whines || []
   },
 };
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useWeb3React } from '@web3-react/core'
 import { 
+  Center,
   VStack,
   HStack,
   Text,
@@ -10,6 +11,7 @@ import {
   WrapItem,
   Heading,
 } from '@chakra-ui/react';
+import constants from 'constants';
 
 import Card from "../Card";
 
@@ -43,7 +45,7 @@ const Whine = (props) => {
     image,
   } = props;
 
-  const imageSrc =`https://gateway.pinata.cloud/ipfs/${image.replace(/^\s*ipfs:\/\//,'')}`;
+  const imageSrc = image && `https://gateway.pinata.cloud/ipfs/${image.replace(/^\s*ipfs:\/\//,'')}`;
 
   return (
     <Card p={[1, 2, 3]}>
@@ -76,21 +78,29 @@ const Whine = (props) => {
 };
 
 const Trade = () => {
-  const { account } = useWeb3React();
+  const { account, chainId } = useWeb3React();
   const [ chainData, setChainData ] = useState();
   const [ whineList, setWhineList ] = useState([]);
 
   useEffect(() => {
-    setChainData(initializeChainData());
+    console.log('cid', chainId, chainId === constants.HARDHAT_CHAIN_ID);
+    setChainData(initializeChainData(chainId === constants.HARDHAT_CHAIN_ID || 'graph'));
     return () => setChainData(null);
-  }, []);
+  }, [chainId]);
 
   useEffect(() => {
+    const fetchData = async () => {
+      if(chainData && account){
+        setWhineList(await chainData.getWhineForAddress(account, 5));
+      }
+    }
+    fetchData();
     if(chainData && account){
-      setWhineList(chainData.getWhineForAddress(account, 3));
       return () => setWhineList([]);
     }
   }, [chainData, account]);
+
+  useEffect( () => console.log(whineList), [whineList]);
 
 
   return (
@@ -98,14 +108,17 @@ const Trade = () => {
       <Heading mt={[0, null, null, -8]} pb={1} color='primary.main'>
         More WHINE?
       </Heading>
-      <Wrap overflowY="scroll" h="100%" w="100%" pb={1} px={3}>
-        {whineList.map(whine => <WrapItem key={whine.id}>
-          <Whine
-            {...whine}
-            showRoyalties
-          />
-        </WrapItem>)}
-      </Wrap>
+      {whineList.length || <Center h="100%"><Heading>Mint some WHINE, then view it here.</Heading></Center>}
+      {whineList.length &&
+        <Wrap justify='center' overflowY="scroll" h="100%" w="100%" pb={1} px={3}>
+          {whineList.map(whine => <WrapItem key={whine.id}>
+            <Whine
+              {...whine}
+              showRoyalties
+            />
+          </WrapItem>)}
+        </Wrap>
+      }
     </VStack>
   );
 };
