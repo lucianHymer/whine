@@ -63,20 +63,19 @@ const MintForm = (props) => {
         showButton: true,
         message: 'Click Next to finalize minting',
         buttonText: 'Next',
-        callback: () => {
-          setLoadButtonState({
-            showSpinner: true,
-            showButton: false,
-            message: "Approve the transaction in your wallet, then wait for it to go through (Step 2 of 2)",
-          });
-          whineContract.mintNft(account, res.data.ipfsHash, parseInt(parseFloat(royalties)*100)).then(res => {
-            const filter = whineContract.filters.Transfer(constants.ZERO_ADDRESS, account);
-            return listen(whineContract, filter)
-          }).then( ([from, to, val, event]) => {
-            console.log('Listened', from, to, val, event);
+        callback: async () => {
+          try {
+            setLoadButtonState({
+              showSpinner: true,
+              showButton: false,
+              message: "Approve the transaction in your wallet, then wait for it to go through (Step 2 of 2)",
+            });
+            const tx = await whineContract.mintNft(account, res.data.ipfsHash, parseInt(parseFloat(royalties)*100)); //.then(res => {
+            const txReceipt = await tx.wait();
+            console.log('txReceipt', txReceipt);
             setLoadButtonState({reset: true});
             Messages.success({title: "Successfully minted some WHINE"});
-          }).catch(handleError);
+          } catch(e) {handleError(e)};
         },
       });
     }).catch(handleError);

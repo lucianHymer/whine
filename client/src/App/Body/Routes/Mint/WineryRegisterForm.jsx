@@ -7,6 +7,7 @@ import {
   Heading,
   FormHelperText,
 } from '@chakra-ui/react';
+import { utils } from "ethers";
 import { useMessages } from "Messages";
 import LoadButton from "App/Body/LoadButton";
 import { useEventListener } from "App/Contract";
@@ -14,6 +15,7 @@ import { useEventListener } from "App/Contract";
 const WineryRegisterForm = (props) => {
   const { whineContract, setWinery } = props;
   const { account } = useWeb3React();
+  const web3data = useWeb3React('data');
   const [ wineryInput, setWineryInput ] = useState('');
   const [ pending, setPending ] = useState(false);
   const messages = useMessages();
@@ -26,21 +28,22 @@ const WineryRegisterForm = (props) => {
   };
 
   const registerWinery = () => {
-    whineContract['registerWinery(string)'](wineryInput).then( r=> {
-      const filter = whineContract.filters.RegisterWinery(account);
-      return listen(whineContract, filter)
-    }).then( ([wallet, event]) => {
-      setPending(false);
-      setWinery(wineryInput);
-    }).catch( e => {
-      const message = (
-        e?.error?.data?.data?.message ||
-        e?.error?.message ||
-        e?.message
-      );
-      messages.error({description: message});
-      setPending(false);
-    });
+    whineContract['registerWinery(string)'](wineryInput)
+      .then( tx => tx.wait())
+      .then( txReceipt => {
+        console.log('txReceipt', txReceipt);
+        setPending(false);
+        setWinery(wineryInput);
+      }).catch( e => {
+        const message = (
+          e?.error?.data?.data?.message ||
+          e?.error?.message ||
+          e?.message
+        );
+        console.log(e);
+        messages.error({description: message});
+        setPending(false);
+      });
   };
 
   // TODO add Pending Approval stage

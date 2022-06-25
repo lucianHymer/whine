@@ -104,13 +104,19 @@ const WalletButtonText = () => {
 
 const Header = (props) => {
   const { account, activate } = useWeb3React();
+  const { activate: activateData } = useWeb3React('data');
   const { pages } = props;
+
+  const handleClick = () => {
+    activate(MetamaskWallet); 
+    activateData(MetamaskWallet);
+  };
 
   return (
     <Flex h='100%' pl={10}>
       <PageSwitch gap={2} h={10} pages={pages} />
       <Spacer />
-      <Button m={2} size='md' onClick={() => account ? "" : activate(MetamaskWallet) }>
+      <Button m={2} size='md' onClick={handleClick}>
         <Flex w="8em">
           <WalletButtonText />
         </Flex>

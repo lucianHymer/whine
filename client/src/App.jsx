@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Whine from "./contracts/Whine.sol/Whine.json";
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
-import { addAxiosAuthenticatorMiddleware } from './axios_authenticator';
+import axiosAuthenticatorMiddleware from './axios_authenticator';
 import { 
   Box,
 } from '@chakra-ui/react';
@@ -28,7 +28,7 @@ const App = () => {
   useEffect( () => {
     // TODO see what happens with this when switching accounts
     if(account){
-      addAxiosAuthenticatorMiddleware(account, library, (errorMessage) => {
+      const middleware = axiosAuthenticatorMiddleware.add(account, library, (errorMessage) => {
         messages.error({
           title: "Auth Error",
           description: errorMessage,
@@ -37,7 +37,13 @@ const App = () => {
         messages.info({
           title: "Please Approve MetaMask Signature",
           description: "This allows for anonymous, secure authentication with our backend",
-          duration: 20000, }); });
+          duration: 20000,
+        });
+      });
+
+      return () => {
+        axiosAuthenticatorMiddleware.remove(middleware);
+      }
     }
   }, [account, library, messages]);
 

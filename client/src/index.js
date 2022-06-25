@@ -4,8 +4,9 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { Web3ReactProvider } from '@web3-react/core'
-import { Web3Provider } from "@ethersproject/providers";
+import { Web3ReactProvider, createWeb3ReactRoot } from '@web3-react/core'
+import { InfuraProvider, Web3Provider } from "@ethersproject/providers";
+import { getDefaultProvider, providers } from "ethers";
 import { BrowserRouter, HashRouter } from "react-router-dom";
 import {
   ChakraProvider,
@@ -16,23 +17,38 @@ import { MessagesProvider } from './Messages';
 import '@fontsource/kanit/400.css'
 import '@fontsource/kanit/700.css'
 
-function getLibrary(provider) {
+function getMetamaskLibrary(provider) {
   return new Web3Provider(provider);
+}
+
+function getDataLibrary(provider) {
+  const chainId = parseInt(provider.networkVersion);
+  if(chainId === constants.HARDHAT_CHAIN_ID)
+    return getMetamaskLibrary(provider);
+
+  return InfuraProvider.getWebSocketProvider(
+    chainId,
+    "73a3b253ac9a43c5ad79ace7abebfcd9"
+  );
 }
 
 const Router = constants.IS_GITHUB_PAGES ?
   HashRouter :
   BrowserRouter;
 
+const Web3ReactDataProvider = createWeb3ReactRoot('data');
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <MessagesProvider>
       <ChakraProvider theme={theme}>
-        <Web3ReactProvider getLibrary={getLibrary}>
-          <Router>
-            <App />
-          </Router>
+        <Web3ReactProvider getLibrary={getMetamaskLibrary}>
+          <Web3ReactDataProvider getLibrary={getDataLibrary}>
+            <Router>
+              <App />
+            </Router>
+          </Web3ReactDataProvider>
         </Web3ReactProvider>
       </ChakraProvider>
     </MessagesProvider>
