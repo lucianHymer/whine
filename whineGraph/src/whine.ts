@@ -16,7 +16,8 @@ import {
   log,
   ipfs,
   json,
-  JSONValue
+  JSONValue,
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export function handleTransfer(event: TransferEvent): void {
@@ -29,8 +30,10 @@ export function handleTransfer(event: TransferEvent): void {
     const ipfsURI = contract.tokenURI(tokenId).replace('ipfs://', '');
 
     whine = new Whine(tokenIdStr);
-    whine.tokenID = event.params.tokenId;
+    whine.tokenID = tokenId;
     whine.tokenURI = ipfsURI;
+
+    whine.royalties = contract.royaltyInfo(tokenId, BigInt.fromI32(10000)).getValue1(); 
 
     log.debug("URI {}", [ipfsURI]);
     const metadata = ipfs.cat(ipfsURI);

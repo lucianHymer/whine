@@ -17,6 +17,7 @@ const GraphChainData = {
                 winery
                 vintage
                 varietal
+                royalties
               }
             }
           }

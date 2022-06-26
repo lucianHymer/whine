@@ -682,6 +682,23 @@ export class Whine extends Entity {
       this.set("varietal", Value.fromString(<string>value));
     }
   }
+
+  get royalties(): BigInt | null {
+    let value = this.get("royalties");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set royalties(value: BigInt | null) {
+    if (!value) {
+      this.unset("royalties");
+    } else {
+      this.set("royalties", Value.fromBigInt(<BigInt>value));
+    }
+  }
 }
 
 export class User extends Entity {

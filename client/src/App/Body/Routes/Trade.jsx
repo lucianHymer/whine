@@ -68,7 +68,7 @@ const Whine = (props) => {
             <Value>{varietal}</Value>
             {
               showRoyalties &&
-                <Value>{Math.round(royalties * 100)}%</Value>
+                <Value>{(royalties / 100).toFixed(2)}%</Value>
             }
           </Box>
         </HStack>

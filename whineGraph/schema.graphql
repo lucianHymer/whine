@@ -71,6 +71,7 @@ type Whine @entity {
   winery: String
   vintage: String
   varietal: String
+  royalties: BigInt
 }
 
 type User @entity {
