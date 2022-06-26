@@ -16,7 +16,7 @@ const Card = (props) => {
     boxShadow: 'xl',
     bg: 'background',
   } : {
-    m: '1',
+    m: '3px',
     borderColor: 'foreground',
     boxShadow: 'lg',
     bg: 'midground',
