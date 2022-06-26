@@ -10,6 +10,7 @@ import {
   Wrap,
   WrapItem,
   Heading,
+  Slide,
 } from '@chakra-ui/react';
 import { useParams } from "react-router-dom";
 import constants from 'constants';
@@ -93,11 +94,10 @@ const Whine = (props) => {
   );
 };
 
-const Sell = (props) => {
+const useWhineList = () => {
   const { account, chainId } = useWeb3React();
   const [ chainData, setChainData ] = useState();
   const [ whineList, setWhineList ] = useState([]);
-  const [ selectedTokenIndices, setSelectedTokenIndices ] = useState([]);
 
   useEffect(() => {
     setChainData(initializeChainData(chainId === constants.HARDHAT_CHAIN_ID || 'graph'));
@@ -116,10 +116,27 @@ const Sell = (props) => {
     }
   }, [chainData, account]);
 
+  return whineList;
+};
+
+const Sell = (props) => {
+  const whineList = useWhineList();
+  const [ selectedTokenIndices, setSelectedTokenIndices ] = useState([]);
+  const [ showIntroText, setShowIntroText ] = useState(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(
+      () => setShowIntroText(false),
+      5000
+    );
+    return () => clearTimeout(timeout);
+  }, []);
+
   const handleSelectionChange = (selected, index) => {
     if(selected){
+      setShowIntroText(false);
       if(!selectedTokenIndices.includes(index))
-      setSelectedTokenIndices(indices => [...indices, index]);
+        setSelectedTokenIndices(indices => [...indices, index]);
     } else {
       const arrayLoc = selectedTokenIndices.indexOf(index);
       if(arrayLoc > -1)
@@ -131,16 +148,29 @@ const Sell = (props) => {
 
   if(whineList.length)
     return (
-      <Wrap justify='center' overflowY="scroll" h="100%" w="100%" pb={1} px={3}>
-        {whineList.map( (whine, index) => <WrapItem key={whine.id}>
-          <Whine
-            {...whine}
-            index={index}
-            selectedCallback={handleSelectionChange}
-            showRoyalties
-          />
-        </WrapItem>)}
-      </Wrap>
+      <>
+        <Wrap justify='center' overflowY="scroll" h="100%" w="100%" pb={1} px={3}>
+          {whineList.map( (whine, index) => <WrapItem key={whine.id}>
+            <Whine
+              {...whine}
+              index={index}
+              selectedCallback={handleSelectionChange}
+              showRoyalties
+            />
+          </WrapItem>)}
+        </Wrap>
+        <Slide direction='bottom' in={showIntroText}>
+          <Box
+            p={1}
+            color='white'
+            bg='foreground'
+            shadow='md'
+            align='center'
+          >
+            Click one or more WHINE cards to select
+          </Box>
+        </Slide>
+      </>
     );
   else
     return (

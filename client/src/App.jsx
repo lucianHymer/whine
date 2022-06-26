@@ -78,10 +78,10 @@ const App = () => {
 
   return (
     <Box bg='background' h='100vh'>
-      <Box h='7vh'>
+      <Box h={['15vh', '7vh']}>
         <Header pages={PAGES} />
       </Box>
-      <Box h='93vh'>
+      <Box h={['85vh', '93vh']}>
         <Body whineContract={whineContract} />
       </Box>
     </Box>
