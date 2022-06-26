@@ -11,7 +11,9 @@ import {
   WrapItem,
   Heading,
 } from '@chakra-ui/react';
+import { useParams } from "react-router-dom";
 import constants from 'constants';
+import PageSwitch from "App/PageSwitch";
 
 import Card from "../Card";
 
@@ -37,18 +39,32 @@ const Value = (props) => {
 
 const Whine = (props) => {
   const {
+    index,
     winery,
     varietal,
     vintage,
     royalties,
     showRoyalties,
     image,
+    selectedCallback,
   } = props;
+
+  const [selected, setSelected] = useState(false);
+
+  useEffect( () => {
+    if(selectedCallback)
+      selectedCallback(selected, index);
+  }, [selected, selectedCallback, index]);
+
+  const handleClick = (event) => {
+    event.preventDefault();
+    setSelected(!selected)
+  };
 
   const imageSrc = image && `https://gateway.pinata.cloud/ipfs/${image.replace(/^\s*ipfs:\/\//,'')}`;
 
   return (
-    <Card p={[1, 2, 3]}>
+    <Card p={[1, 2, 3]} selected={selected} onClick={handleClick}>
       <VStack>
         <Image
           boxSize={[28, 36, 48]}
@@ -77,13 +93,13 @@ const Whine = (props) => {
   );
 };
 
-const Trade = () => {
+const Sell = (props) => {
   const { account, chainId } = useWeb3React();
   const [ chainData, setChainData ] = useState();
   const [ whineList, setWhineList ] = useState([]);
+  const [ selectedTokenIndices, setSelectedTokenIndices ] = useState([]);
 
   useEffect(() => {
-    console.log('cid', chainId, chainId === constants.HARDHAT_CHAIN_ID);
     setChainData(initializeChainData(chainId === constants.HARDHAT_CHAIN_ID || 'graph'));
     return () => setChainData(null);
   }, [chainId]);
@@ -91,7 +107,7 @@ const Trade = () => {
   useEffect(() => {
     const fetchData = async () => {
       if(chainData && account){
-        setWhineList(await chainData.getWhineForAddress(account, 5));
+        setWhineList(await chainData.getWhineForAddress(account, 8));
       }
     }
     fetchData();
@@ -100,25 +116,53 @@ const Trade = () => {
     }
   }, [chainData, account]);
 
-  useEffect( () => console.log(whineList), [whineList]);
+  const handleSelectionChange = (selected, index) => {
+    if(selected){
+      if(!selectedTokenIndices.includes(index))
+      setSelectedTokenIndices(indices => [...indices, index]);
+    } else {
+      const arrayLoc = selectedTokenIndices.indexOf(index);
+      if(arrayLoc > -1)
+        setSelectedTokenIndices(indices =>
+          [...indices.slice(0, arrayLoc), ...indices.slice(arrayLoc + 1)]
+        );
+    }
+  };
 
+  if(whineList.length)
+    return (
+      <Wrap justify='center' overflowY="scroll" h="100%" w="100%" pb={1} px={3}>
+        {whineList.map( (whine, index) => <WrapItem key={whine.id}>
+          <Whine
+            {...whine}
+            index={index}
+            selectedCallback={handleSelectionChange}
+            showRoyalties
+          />
+        </WrapItem>)}
+      </Wrap>
+    );
+  else
+    return (
+      <Center h="100%">
+        <Heading>Mint some WHINE, then view it here.</Heading>
+      </Center>
+    );
+};
+
+const Buy = (props) => {
+};
+
+const Trade = (props) => {
+  const { mode } = useParams();
 
   return (
     <VStack h="100%" w="100%">
       <Heading mt={[0, null, null, -8]} pb={1} color='primary.main'>
         More WHINE?
       </Heading>
-      {whineList.length || <Center h="100%"><Heading>Mint some WHINE, then view it here.</Heading></Center>}
-      {whineList.length &&
-        <Wrap justify='center' overflowY="scroll" h="100%" w="100%" pb={1} px={3}>
-          {whineList.map(whine => <WrapItem key={whine.id}>
-            <Whine
-              {...whine}
-              showRoyalties
-            />
-          </WrapItem>)}
-        </Wrap>
-      }
+      <PageSwitch gap={2} h={10} pages={["Sell", "Buy"]} baseURL="/trade" />
+      {mode === 'sell' ? <Sell /> : <Buy />}
     </VStack>
   );
 };

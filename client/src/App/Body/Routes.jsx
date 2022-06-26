@@ -17,6 +17,14 @@ const Routes = (props) => {
         element={<Mint {...props} />}
       />
       <Route
+        path='/trade' 
+        element={<Navigate to='/trade/sell' replace />}
+      />
+      <Route
+        path='/trade/:mode'
+        element={<Trade {...props}/>}
+      />
+      <Route
         path='/trade'
         element={<Trade {...props} />}
       />

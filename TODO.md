@@ -18,6 +18,7 @@
 - [ ] Make server use IPFS directory using same method as IPFS deploy
 - [ ] Set up backend continuous deployment
 - [ ] Set up frontend continuous deployment
+- [ ] Do something cool with wine bottle image generation
 - [ ] Enable dark mode
 - [x] Add messaging system
 - [x] Add loading animation that listens for events
