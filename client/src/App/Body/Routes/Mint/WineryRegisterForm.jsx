@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useWeb3React } from '@web3-react/core'
 import { 
   Input,
   FormLabel,
@@ -7,19 +6,14 @@ import {
   Heading,
   FormHelperText,
 } from '@chakra-ui/react';
-import { utils } from "ethers";
 import { useMessages } from "Messages";
 import LoadButton from "App/Body/LoadButton";
-import { useEventListener } from "App/Contract";
 
 const WineryRegisterForm = (props) => {
   const { whineContract, setWinery } = props;
-  const { account } = useWeb3React();
-  const web3data = useWeb3React('data');
   const [ wineryInput, setWineryInput ] = useState('');
   const [ pending, setPending ] = useState(false);
   const messages = useMessages();
-  const listen = useEventListener();
 
   const handleSubmit = (event) => {
     setPending(true);

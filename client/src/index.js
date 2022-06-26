@@ -6,7 +6,6 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Web3ReactProvider, createWeb3ReactRoot } from '@web3-react/core'
 import { InfuraProvider, Web3Provider } from "@ethersproject/providers";
-import { getDefaultProvider, providers } from "ethers";
 import { BrowserRouter, HashRouter } from "react-router-dom";
 import {
   ChakraProvider,

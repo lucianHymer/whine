@@ -12,7 +12,6 @@ import RoyaltiesField from './MintForm/RoyaltiesField';
 import VintageField from './MintForm/VintageField';
 import { useMessages } from 'Messages';
 import LoadButton, { useLoadButtonReducer } from "App/Body/LoadButton";
-import { useEventListener } from "App/Contract";
 
 const MintForm = (props) => {
   const { whineContract, winery } = props;
@@ -26,7 +25,6 @@ const MintForm = (props) => {
     buttonText: 'Mint',
   });
   const Messages = useMessages();
-  const listen = useEventListener();
 
   const handleSubmit = (event) => {
     event.preventDefault();

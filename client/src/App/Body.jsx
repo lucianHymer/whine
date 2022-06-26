@@ -7,7 +7,7 @@ import {
 const NoWallet = () => {
   return (
     <Center h="100%">
-      Please connect your MetaMask wallet
+      Please connect your MetaMask wallet on the Goerli testnet
     </Center>
   );
 };

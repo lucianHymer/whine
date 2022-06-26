@@ -39,7 +39,7 @@ const PageLink = (props) => {
               color:'secondary.main',
               borderWidth: theme.sizes['1'],
               borderRadius: theme.sizes['3'],
-              borderColor: 'background',
+              borderColor: 'white',
             } : {})
           }
         >
@@ -103,7 +103,7 @@ const WalletButtonText = () => {
 };
 
 const Header = (props) => {
-  const { account, activate } = useWeb3React();
+  const { activate, account } = useWeb3React();
   const { activate: activateData } = useWeb3React('data');
   const { pages } = props;
 
@@ -116,7 +116,7 @@ const Header = (props) => {
     <Flex h='100%' pl={10}>
       <PageSwitch gap={2} h={10} pages={pages} />
       <Spacer />
-      <Button m={2} size='md' onClick={handleClick}>
+      <Button m={2} variant={account ? 'solid' : 'outline'} size='md' onClick={handleClick}>
         <Flex w="8em">
           <WalletButtonText />
         </Flex>
