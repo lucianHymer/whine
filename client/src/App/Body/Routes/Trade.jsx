@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useWeb3React } from '@web3-react/core'
 import { 
   Center,
@@ -12,12 +12,31 @@ import {
   Heading,
   Slide,
   Button,
+  useDisclosure,
+  Drawer,
+  DrawerBody,
+  DrawerHeader,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerOverlay,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  Slider,
+  SliderTrack,
+  SliderFilledTrack,
+  SliderThumb,
 } from '@chakra-ui/react';
 import { useParams } from "react-router-dom";
 import constants from 'constants';
 import PageSwitch from "App/PageSwitch";
 import UnderConstruction from "./UnderConstruction";
 import { PlusSquareIcon } from "@chakra-ui/icons";
+import LoadButton from "App/Body/LoadButton";
+import { useMessages } from "Messages";
 
 import Card from "../Card";
 
@@ -122,11 +141,18 @@ const useWhineList = () => {
   return whineList;
 };
 
+// TODO add "Clear Selection", need to bump up highlight logic
 const Sell = (props) => {
+  const { whineContract } = props;
   const whineList = useWhineList();
   const [ selectedTokenIndices, setSelectedTokenIndices ] = useState([]);
   const [ showIntroText, setShowIntroText ] = useState(true);
   const [ showListPopup, setShowListPopup ] = useState(false);
+  const [ pendingApproval, setPendingApproval ] = useState(false);
+  const [ listPrice, setListPrice ] = useState(.05);
+  const drawerControls = useDisclosure();
+  const listButtonRef = useRef();
+  const messages = useMessages();
 
   useEffect(() => {
     const timeout = setTimeout(
@@ -150,12 +176,36 @@ const Sell = (props) => {
     }
   };
 
+  const handleApprove = async () => {
+    if(selectedTokenIndices.length){
+      setPendingApproval(true);
+      const tokens = whineList.filter( (whine, idx) => selectedTokenIndices.includes(idx) );
+      const tokenIDs = tokens.map( token => parseInt(token.tokenID) );
+      try {
+        const tx = await whineContract.approveMultiple(constants.TREASURY_ADDRESS, tokenIDs);
+        const txReceipt = await tx.wait();
+        console.log('txReceipt', txReceipt);
+        messages.success({description: "Listed WHINE for sale"});
+        drawerControls.onClose();
+      } catch (e) {
+        messages.handleError(e);
+      }
+      setPendingApproval(false);
+    }
+  };
+
   useEffect( () => {
     if(selectedTokenIndices.length)
       setShowListPopup(true);
     else
       setShowListPopup(false);
   }, [selectedTokenIndices]);
+
+  const listPriceInputProps = {
+    min: 0,
+    // max: 10,
+    step: 0.01,
+  };
 
   if(whineList.length)
     return (
@@ -184,7 +234,13 @@ const Sell = (props) => {
         </Slide>
         <Slide direction='bottom' in={showListPopup}>
           <Center>
-            <Button mb={3} p={8} w={[56, 72]}>
+            <Button
+              ref={listButtonRef}
+              mb={3}
+              p={8}
+              w={[56, 72]}
+              onClick={drawerControls.onOpen}
+            >
               <PlusSquareIcon boxSize={8} mr={8}/>
               <Text fontSize={["lg", "2xl"]} as="span">
                 List
@@ -196,6 +252,75 @@ const Sell = (props) => {
             </Button>
           </Center>
         </Slide>
+        <Drawer
+          isOpen={drawerControls.isOpen}
+          placement='right'
+          onClose={drawerControls.onClose}
+          finalFocusRef={listButtonRef}
+        >
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerHeader>List WHINE Tokens</DrawerHeader>
+            <DrawerBody>
+              <HStack mt={8} w='100%'>
+                <Text whiteSpace="nowrap">
+                  Token Price (eth): 
+                </Text>
+                <NumberInput
+                  value={listPrice}
+                  onChange={setListPrice}
+                  {...listPriceInputProps}
+                >
+                  <NumberInputField />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              </HStack>
+              <Text mt={16}>
+                More controls to be added...
+              </Text>
+              {false && <Slider
+                mt={4}
+                focusThumbOnChange={false}
+                onChange={setListPrice}
+                value={listPrice}
+                {...listPriceInputProps}
+              >
+                <SliderTrack>
+                  <SliderFilledTrack />
+                </SliderTrack>
+                <SliderThumb
+                  fontSize="sm"
+                  boxSize="32px"
+                  children={parseInt(listPrice)}
+                />
+              </Slider>
+              }
+            </DrawerBody>
+
+            <DrawerFooter>
+              <Button
+                display={pendingApproval ? "none" : "inline-flex"}
+                variant='outline'
+                mr={3}
+                onClick={drawerControls.onClose}
+              >
+                Cancel
+              </Button>
+              <LoadButton
+                callback={handleApprove}
+                showSpinner={pendingApproval}
+                showButton={!pendingApproval}
+                hideMessage={!pendingApproval}
+                message="Approve the transaction in your wallet, then wait for it to go through"
+                buttonText={`List ${selectedTokenIndices.length} Token${selectedTokenIndices.length !== 1 ? "s" : ""} for Sale`}
+              />
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
       </>
     );
   else
@@ -211,6 +336,7 @@ const Buy = (props) => {
 };
 
 const Trade = (props) => {
+  const { whineContract } = props;
   const { mode } = useParams();
 
   return (
@@ -219,7 +345,10 @@ const Trade = (props) => {
         More WHINE?
       </Heading>
       <PageSwitch gap={2} h={10} pages={["Sell", "Buy"]} baseURL="/trade" />
-      {mode === 'sell' ? <Sell /> : <Buy />}
+      {mode === 'sell' ?
+        <Sell whineContract={whineContract} /> :
+        <Buy whineContract={whineContract} />
+      }
     </VStack>
   );
 };

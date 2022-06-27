@@ -111,6 +111,12 @@ contract Whine is ERC721URIStorage, AccessControl, ERC2981 {
     return newNftTokenId;
   }
 
+  function approveMultiple(address to, uint256[] calldata tokenIds) public {
+    for(uint i=0; i<tokenIds.length; i++){
+      approve(to, tokenIds[i]);
+    }
+  }
+
   function sell(
     address payable from,
     address to,

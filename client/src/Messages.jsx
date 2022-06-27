@@ -20,6 +20,17 @@ const MessagesProvider = (props) => {
     warning: genToast(toast, 'warning', 'Warning'),
     success: genToast(toast, 'success', 'Success'),
   };
+
+  value.handleError = (error) => {
+    console.log(error);
+    const message = (
+      error?.error?.data?.data?.message ||
+      error?.error?.message ||
+      error?.message
+    );
+    value.error({description: message});
+  };
+
   return (
     <Messages.Provider value={value}>
       {props.children}

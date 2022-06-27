@@ -15,6 +15,9 @@ const constants = [{
   name: "ZERO_ADDRESS",
   prod: '0x0000000000000000000000000000000000000000',
 },{
+  name: "TREASURY_ADDRESS",
+  prod: "0xbc51CfA8DbCfF762510b38cC77F0c4CDa9af941a",
+},{
   name: "DEMO",
   prod: process.env.DEMO,
 }].reduce((constants, constant) => {
