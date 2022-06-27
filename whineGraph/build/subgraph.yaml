@@ -8,9 +8,9 @@ dataSources:
     name: Whine
     network: goerli
     source:
-      address: "0x4953BB773E1c21e8a263B090B112350eC04dA4DE"
+      address: "0x63B83aCE814280AE66C5116023eA3e426817C2a5"
       abi: Whine
-      startBlock: 7116578
+      startBlock: 7128085
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5

@@ -1,4 +1,5 @@
 # TO-DO
+- [ ] Add Approvals (and unappove e.g. to 0x0) to Graph
 - [ ] Add marketplace functionality - sell side
 - [ ] Add marketplace functionality - buy side
 - [ ] On server, watch for Register events in demo mode and send them some wine from a treasury
