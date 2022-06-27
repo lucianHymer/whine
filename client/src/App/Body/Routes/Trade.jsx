@@ -11,10 +11,13 @@ import {
   WrapItem,
   Heading,
   Slide,
+  Button,
 } from '@chakra-ui/react';
 import { useParams } from "react-router-dom";
 import constants from 'constants';
 import PageSwitch from "App/PageSwitch";
+import UnderConstruction from "./UnderConstruction";
+import { PlusSquareIcon } from "@chakra-ui/icons";
 
 import Card from "../Card";
 
@@ -123,6 +126,7 @@ const Sell = (props) => {
   const whineList = useWhineList();
   const [ selectedTokenIndices, setSelectedTokenIndices ] = useState([]);
   const [ showIntroText, setShowIntroText ] = useState(true);
+  const [ showListPopup, setShowListPopup ] = useState(false);
 
   useEffect(() => {
     const timeout = setTimeout(
@@ -146,6 +150,13 @@ const Sell = (props) => {
     }
   };
 
+  useEffect( () => {
+    if(selectedTokenIndices.length)
+      setShowListPopup(true);
+    else
+      setShowListPopup(false);
+  }, [selectedTokenIndices]);
+
   if(whineList.length)
     return (
       <>
@@ -166,9 +177,24 @@ const Sell = (props) => {
             bg='foreground'
             shadow='md'
             align='center'
+            rounded='md'
           >
             Click one or more WHINE cards to select
           </Box>
+        </Slide>
+        <Slide direction='bottom' in={showListPopup}>
+          <Center>
+            <Button mb={3} p={8} w={[56, 72]}>
+              <PlusSquareIcon boxSize={8} mr={8}/>
+              <Text fontSize={["lg", "2xl"]} as="span">
+                List
+                <Text px={1} as="span" color="secondary.main">
+                  {selectedTokenIndices.length}
+                </Text>
+                token{selectedTokenIndices.length !== 1 && "s"}
+              </Text>
+            </Button>
+          </Center>
         </Slide>
       </>
     );
@@ -181,6 +207,7 @@ const Sell = (props) => {
 };
 
 const Buy = (props) => {
+  return <UnderConstruction />
 };
 
 const Trade = (props) => {

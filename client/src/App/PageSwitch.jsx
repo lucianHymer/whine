@@ -14,7 +14,6 @@ const PageLink = (props) => {
   const theme = useTheme();
   const resolved = useResolvedPath(url)
   resolved.pathname = resolved.pathname.replace(/(\/\*)?$/,'/*');
-  console.log('resolved', resolved);
   const match = useMatch({path: resolved.pathname});
 
   return (

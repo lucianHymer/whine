@@ -44,39 +44,32 @@ const MintForm = (props) => {
       image: "ipfs://QmXVq2TDQVc4g6FzZCGXUmEu7MDkcAAGmGy83Eijnwt2mH/wineBottle.png",
       properties: {vintage: `${vintage}`, varietal, winery}
     };
-    const handleError = (e) => {
+
+    axios.post(`${constants.BACKEND_URL}/create_nft_metadata`, {
+      metadata
+    }).then(async res => {
+      setLoadButtonState({
+        showSpinner: true,
+        showButton: false,
+        message: "Approve the transaction in your wallet, then wait for it to go through (Step 2 of 2)",
+      });
+      const tx = await whineContract.mintNft(account, res.data.ipfsHash, parseInt(parseFloat(royalties)*100));
+      const txReceipt = await tx.wait();
+      console.log('txReceipt', txReceipt);
+      setLoadButtonState({reset: true});
+      Messages.success({
+        title: "Successfully minted some WHINE!",
+        description: "Go check it out on the Trade page.",
+        duration: 6000,
+      });
+    }).catch((e) => {
       Messages.error({
         title: 'Error creating NFT',
         description: e?.error?.data?.message || e?.message,
       });
       console.log('Error creating NFT', e)
       setLoadButtonState({reset: true});
-    };
-
-    axios.post(`${constants.BACKEND_URL}/create_nft_metadata`, {
-      metadata
-    }).then(res => {
-      setLoadButtonState({
-        showSpinner: true,
-        showButton: true,
-        message: 'Click Next to finalize minting',
-        buttonText: 'Next',
-        callback: async () => {
-          try {
-            setLoadButtonState({
-              showSpinner: true,
-              showButton: false,
-              message: "Approve the transaction in your wallet, then wait for it to go through (Step 2 of 2)",
-            });
-            const tx = await whineContract.mintNft(account, res.data.ipfsHash, parseInt(parseFloat(royalties)*100)); //.then(res => {
-            const txReceipt = await tx.wait();
-            console.log('txReceipt', txReceipt);
-            setLoadButtonState({reset: true});
-            Messages.success({title: "Successfully minted some WHINE"});
-          } catch(e) {handleError(e)};
-        },
-      });
-    }).catch(handleError);
+    });
   };
 
   return (

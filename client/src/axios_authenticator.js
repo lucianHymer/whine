@@ -6,7 +6,7 @@ import { Service } from 'axios-middleware';
 // TODO cancel toast on sign/reject
 // TODO Add a "I see that you rejected" message on reject
 
-const add = (account, library, errorHandler, signAlertHandler) => {
+const add = (account, library, errorHandler) => {
   const service = new Service(axios);
 
   const middleware = {
@@ -16,7 +16,6 @@ const add = (account, library, errorHandler, signAlertHandler) => {
         !config.url.includes('authentication')
       ){
         console.log('onRequest POST start');
-        signAlertHandler();
 
         return axios(`${constants.BACKEND_URL}/authentication/${account}/initiate`)
           .then(response => {

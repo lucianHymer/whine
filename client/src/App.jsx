@@ -33,12 +33,6 @@ const App = () => {
           title: "Auth Error",
           description: errorMessage,
         });
-      }, () => {
-        messages.info({
-          title: "Please Approve MetaMask Signature",
-          description: "This allows for anonymous, secure authentication with our backend",
-          duration: 20000,
-        });
       });
 
       return () => {

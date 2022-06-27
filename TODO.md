@@ -1,4 +1,7 @@
 # TO-DO
+- [ ] Add marketplace functionality - sell side
+- [ ] Add marketplace functionality - buy side
+- [ ] On server, watch for Register events in demo mode and send them some wine from a treasury
 - [ ] Add top-level error boundary
 - [ ] Add HTTPS check in github pages, instruct to view HTTP
 - [ ] Add test mode check to contract and disable winery approval restrictions

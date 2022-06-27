@@ -8,6 +8,10 @@ import {
   Button,
   Text,
   useBreakpointValue,
+  Menu,
+  MenuList,
+  MenuItem,
+  MenuButton,
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import PageSwitch from "./PageSwitch";
@@ -64,18 +68,49 @@ const Header = (props) => {
     </Button>
   );
 
+  const menu = (
+    <Menu>
+      <MenuButton
+        m={2}
+        w={direction === 'vertical' && 32}
+        size='md'
+        as={Button}
+      >
+        <Flex align='center'>
+          {direction === 'vertical' && <>
+            <Spacer />
+            Menu
+          </>}
+          <Spacer />
+          <HamburgerIcon />
+          <Spacer />
+        </Flex>
+      </MenuButton>
+      <MenuList>
+        <MenuItem
+          as="a"
+          href="https://github.com/lucianHymer/whine"
+          target="_blank"
+        >
+          View Docs
+        </MenuItem>
+        <MenuItem
+          as="a"
+          href="https://discord.com/users/964361147371360286"
+          target="_blank"
+        >
+          Contact Creator
+        </MenuItem>
+      </MenuList>
+    </Menu>
+  );
+
   if(direction === 'vertical')
     return (
       <VStack h='100%'>
         <Flex>
           {connectButton}
-          <Button m={2} w={32} size='md' onClick={() => alert("Under Development") }>
-            <Spacer />
-            Menu
-            <Spacer />
-            <HamburgerIcon />
-            <Spacer />
-          </Button>
+          {menu}
         </Flex>
         {pageSwitch}
       </VStack>
@@ -86,9 +121,7 @@ const Header = (props) => {
         {pageSwitch}
         <Spacer />
         {connectButton}
-        <Button m={2} size='md' onClick={() => alert("Under Development") }>
-          <HamburgerIcon />
-        </Button>
+        {menu}
       </Flex>
     );
 
