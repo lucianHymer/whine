@@ -165,7 +165,10 @@ const Sell = (props) => {
   const handleSelectionChange = (selected, index) => {
     if(selected){
       setShowIntroText(false);
-      if(!selectedTokenIndices.includes(index))
+      if(
+        !whineList[index].listed &&
+        !selectedTokenIndices.includes(index)
+      )
         setSelectedTokenIndices(indices => [...indices, index]);
     } else {
       const arrayLoc = selectedTokenIndices.indexOf(index);
