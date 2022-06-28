@@ -598,6 +598,15 @@ export class Whine extends Entity {
     this.set("tokenURI", Value.fromString(value));
   }
 
+  get listed(): boolean {
+    let value = this.get("listed");
+    return value!.toBoolean();
+  }
+
+  set listed(value: boolean) {
+    this.set("listed", Value.fromBoolean(value));
+  }
+
   get owner(): string | null {
     let value = this.get("owner");
     if (!value || value.kind == ValueKind.NULL) {
@@ -697,6 +706,40 @@ export class Whine extends Entity {
       this.unset("royalties");
     } else {
       this.set("royalties", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get approvedAddress(): Bytes | null {
+    let value = this.get("approvedAddress");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set approvedAddress(value: Bytes | null) {
+    if (!value) {
+      this.unset("approvedAddress");
+    } else {
+      this.set("approvedAddress", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get approvalUpdatedBlock(): BigInt | null {
+    let value = this.get("approvalUpdatedBlock");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set approvalUpdatedBlock(value: BigInt | null) {
+    if (!value) {
+      this.unset("approvalUpdatedBlock");
+    } else {
+      this.set("approvalUpdatedBlock", Value.fromBigInt(<BigInt>value));
     }
   }
 }

@@ -23,6 +23,8 @@ dataSources:
         - name: Whine
           file: Whine/abis/Whine.json
       eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
       file: Whine/Whine.wasm

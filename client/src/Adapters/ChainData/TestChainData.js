@@ -20,6 +20,7 @@ const TestChainData = {
       varietal: whineBS(),
       royalties: (Math.random() * 500),
       image: 'ipfs://QmXVq2TDQVc4g6FzZCGXUmEu7MDkcAAGmGy83Eijnwt2mH/wineBottle.png',
+      listed: Math.random() > .7,
     }));
   },
 };

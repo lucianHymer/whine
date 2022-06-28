@@ -66,12 +66,15 @@ type Whine @entity {
   id: ID!
   tokenID: BigInt!
   tokenURI: String!
+  listed: Boolean!
   owner: User
   image: String
   winery: String
   vintage: String
   varietal: String
   royalties: BigInt
+  approvedAddress: Bytes
+  approvalUpdatedBlock: BigInt
 }
 
 type User @entity {

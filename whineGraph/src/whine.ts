@@ -20,71 +20,56 @@ import {
   json,
   JSONValue,
   BigInt,
+  Address,
 } from "@graphprotocol/graph-ts";
 
-// export function handleApproval(event: ApprovalEvent): void {
-//   const tokenId = event.params.tokenId;
-//   const tokenIdStr = tokenId.toString();
-//   let whine = Whine.load(tokenIdStr);
-// 
-//   if(!whine || !whine.image || !whine.winery) {
-//     const contract = WhineContract.bind(event.address);
-//     const ipfsURI = contract.tokenURI(tokenId).replace('ipfs://', '');
-// 
-//     whine = new Whine(tokenIdStr);
-//     whine.tokenID = tokenId;
-//     whine.tokenURI = ipfsURI;
-// 
-//     whine.royalties = contract.royaltyInfo(tokenId, BigInt.fromI32(10000)).getValue1(); 
-// 
-//     log.debug("URI {}", [ipfsURI]);
-//     const metadata = ipfs.cat(ipfsURI);
-//     if(metadata){
-//       const metaVals = json.fromBytes(metadata).toObject();
-//       if(metaVals){
-//         const image = metaVals.get('image');
-//         if(image){
-//           whine.image = image.toString();
-//         }
-//         const properties = metaVals.get('properties');
-//         if(properties){
-//           const propertiesObj = properties.toObject();
-// 
-//           const vintage = propertiesObj.get('vintage');
-//           if(vintage)
-//             whine.vintage = vintage.toString();
-// 
-//           const varietal = propertiesObj.get('varietal');
-//           if(varietal)
-//             whine.varietal = varietal.toString();
-// 
-//           const winery = propertiesObj.get('winery');
-//           if(winery)
-//             whine.winery = winery.toString();
-//         }
-//       }
-//     }
-//     const owner = event.params.to.toHexString();
-//     whine.owner = owner;
-//     whine.save();
-// 
-//     if(!User.load(owner)){
-//       new User(owner).save();
-//     }
-//   }
-// }
+// TODO add approvalForAll watcher
+export function handleApproval(event: ApprovalEvent): void {
+  const tokenId = event.params.tokenId;
+  const tokenIdStr = tokenId.toString();
+  const blockNum = event.block.number;
+  const approvedAddress = event.params.approved;
+
+  const whine = new Whine(tokenIdStr);
+
+  whine.approvalUpdatedBlock = blockNum;
+
+  if(approvedAddress === Address.zero()){
+    log.debug("Disapprove at block {}", [blockNum.toString()]);
+    whine.listed = false;
+  } else {
+    log.debug("Approve at block {}", [blockNum.toString()]);
+    whine.listed = true;
+  }
+
+  whine.approvedAddress = approvedAddress;
+
+  whine.save();
+}
 
 export function handleTransfer(event: TransferEvent): void {
   const tokenId = event.params.tokenId;
   const tokenIdStr = tokenId.toString();
-  let whine = Whine.load(tokenIdStr);
+  const whine = new Whine(tokenIdStr);
 
-  if(!whine) {
-    whine = new Whine(tokenIdStr);
-  }
 
   if(!whine.image || !whine.winery) {
-    const contract = WhineContract.bind(event.address);
+    populateWhineMetadata(whine, event.address, tokenId);
+  }
+
+  whine.listed = false;
+
+  const owner = event.params.to.toHexString();
+  whine.owner = owner;
+  whine.save();
+
+  if(!User.load(owner)){
+    new User(owner).save();
+  }
+}
+
+function populateWhineMetadata(whine: Whine, contractAddress: Address, tokenId: BigInt): void {
+    const contract = WhineContract.bind(contractAddress);
     const ipfsURI = contract.tokenURI(tokenId).replace('ipfs://', '');
 
     whine.tokenID = tokenId;
@@ -120,15 +105,14 @@ export function handleTransfer(event: TransferEvent): void {
           whine.winery = winery.toString();
       }
     }
-    const owner = event.params.to.toHexString();
-    whine.owner = owner;
-    whine.save();
-
-    if(!User.load(owner)){
-      new User(owner).save();
-    }
-  }
 }
 
-// function getWhineMetadata(whine){
-// }
+function getWhineForId(tokenIdStr: String): Whine {
+  let whine = Whine.load(tokenIdStr);
+
+  if(!whine) {
+    whine = new Whine(tokenIdStr);
+  }
+
+  return whine;
+}

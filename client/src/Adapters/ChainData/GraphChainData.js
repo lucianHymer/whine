@@ -9,7 +9,7 @@ const GraphChainData = {
           {
             users (where: {id: "${address.toLowerCase()}"}) {
               id
-              Whines (orderBy: tokenID ${limit && `first: ${limit}`}) {
+              Whines (orderBy: tokenID orderDirection: desc ${limit && `first: ${limit}`}) {
                 id
                 tokenID
                 tokenURI
@@ -18,6 +18,7 @@ const GraphChainData = {
                 vintage
                 varietal
                 royalties
+                listed
               }
             }
           }
