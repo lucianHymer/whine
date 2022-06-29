@@ -34,7 +34,8 @@ export function handleApproval(event: ApprovalEvent): void {
 
   whine.approvalUpdatedBlock = blockNum;
 
-  if(approvedAddress === Address.zero()){
+  // === doesn't work here, need to look into why
+  if(approvedAddress == Address.zero()){
     log.debug("Disapprove at block {}", [blockNum.toString()]);
     whine.listed = false;
   } else {

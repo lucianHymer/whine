@@ -38,7 +38,7 @@ which needed to be server-side to secure Pinata credentials.
 # Roadmap
 - [x] **v0.1** Presentable versions of each page
 - [x] **v0.2** Deploying front/backend to internet and contract to live testnet
-- [ ] **v0.3** Fully implemented "demo mode" of minting, viewing, and Sell-side trading NFTs
+- [x] **v0.3** Fully implemented "demo mode" of minting, viewing, and Sell-side trading NFTs
 - [ ] **v0.4** Refactor, clean up, pick linter rules to be fully presentable
 - [ ] **v0.5** Implement Buy-side trading
 - [ ] **v0.6** WHINE Redemption
@@ -51,11 +51,15 @@ which needed to be server-side to secure Pinata credentials.
 - Hardhat
 - Ethers.js
 - OpenZeppelin ERC721, ERC2981 (Royalties), AccessControl
+- Goerli Testnet
 ### Client Application
 - React (Hooks)
 - Chakra UI
 - React Router
 - Ethers.js
+- The Graph
+  - Custom subgraph for the WHINE token to track attributes and listing status
+  - Plans for trade tracking on the same subgraph and another for winery reputation
 - Hosted statically in github pages
 ### Server Application
 - NodeJS

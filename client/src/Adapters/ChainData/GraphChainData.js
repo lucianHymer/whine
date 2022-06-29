@@ -9,7 +9,7 @@ const GraphChainData = {
           {
             users (where: {id: "${address.toLowerCase()}"}) {
               id
-              Whines (orderBy: tokenID orderDirection: desc ${limit && `first: ${limit}`}) {
+              Whines (orderBy: tokenID orderDirection: desc ${limit ? `first: ${limit}` : ""}) {
                 id
                 tokenID
                 tokenURI

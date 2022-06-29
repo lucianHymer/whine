@@ -53,17 +53,20 @@ const LoadButton = (props) => {
     message,
     buttonText,
     callback,
+    innerRef,
+    children,
+    buttonOverrideProps,
     ...rest
   } = props;
 
-  const buttonProps = callback ?  {
+  const buttonProps = Object.assign(callback ?  {
     onClick: callback
   } : {
     type: 'submit'
-  };
+  }, buttonOverrideProps);
 
   return (
-    <VStack {...rest}>
+    <VStack ref={innerRef} {...rest}>
       {showSpinner && <Spinner
         size='lg'
         mb={4}
@@ -72,8 +75,8 @@ const LoadButton = (props) => {
       />}
       {!hideMessage && message && <Text mb={4}>{message}</Text>}
       {showButton &&
-        <Button {...buttonProps} size='md'>
-          {buttonText}
+        <Button {...buttonProps}>
+          {buttonText || children}
         </Button>
       }
     </VStack>

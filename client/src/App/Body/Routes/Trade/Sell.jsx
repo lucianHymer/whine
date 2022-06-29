@@ -36,6 +36,7 @@ import { initializeChainData } from "Adapters/ChainData";
 const useWineFromChain = () => {
   const { account, chainId } = useWeb3React();
   const [ chainData, setChainData ] = useState();
+  const [ counter, setCounter ] = useState(0);
   const [ whineList, setWhineList ] = useState([]);
 
   useEffect(() => {
@@ -46,15 +47,17 @@ const useWineFromChain = () => {
   useEffect(() => {
     (async () => {
       if(chainData && account){
-        setWhineList(await chainData.getWhineForAddress(account, 8));
+        setWhineList(await chainData.getWhineForAddress(account));
       }
     })();
     if(chainData && account){
       return () => setWhineList([]);
     }
-  }, [chainData, account]);
+  }, [chainData, account, counter]);
 
-  return whineList;
+  const refresh = () => setCounter(c => c+1);
+
+  return [ whineList, refresh ];
 };
 
 const SellDrawer = (props) => {
@@ -64,6 +67,7 @@ const SellDrawer = (props) => {
     listButtonRef,
     whineContract,
     drawerControls,
+    handleReset,
   } = props;
 
   const [ pendingApproval, setPendingApproval ] = useState(false);
@@ -81,6 +85,7 @@ const SellDrawer = (props) => {
         console.log('txReceipt', txReceipt);
         messages.success({description: "Listed WHINE for sale"});
         drawerControls.onClose();
+        handleReset();
       } catch (e) {
         messages.handleError(e);
       }
@@ -147,12 +152,23 @@ const SellDrawer = (props) => {
 // TODO add "Clear Selection", need to bump up highlight logic
 const Sell = (props) => {
   const { whineContract } = props;
-  const whineList = useWineFromChain();
+  const [ whineList, refreshWhineList ] = useWineFromChain();
   const [ selectedTokenIndices, setSelectedTokenIndices ] = useState([]);
   const [ showIntroText, setShowIntroText ] = useState(true);
   const [ showListPopup, setShowListPopup ] = useState(false);
+  const [ pendingUnlistIndex, setPendingUnlistIndex ] = useState();
   const drawerControls = useDisclosure();
   const listButtonRef = useRef();
+  const messages = useMessages();
+
+  const reset = () => {
+    setSelectedTokenIndices([]);
+    setShowListPopup(false);
+    setShowIntroText(false);
+    setPendingUnlistIndex();
+    drawerControls.onClose();
+    refreshWhineList();
+  };
 
   useEffect(() => {
     const timeout = setTimeout(
@@ -184,6 +200,21 @@ const Sell = (props) => {
     }
   };
 
+  const handleUnlist = async (index) => {
+    try {
+      setPendingUnlistIndex(index);
+      const tokenID = parseInt(whineList[index].tokenID);
+      const tx = await whineContract.approve(constants.ZERO_ADDRESS, tokenID);
+      const txReceipt = await tx.wait();
+      console.log('txReceipt', txReceipt);
+      messages.success({description: "Unlisted WHINE"});
+      reset();
+    } catch (e) {
+      messages.handleError(e);
+    }
+    setPendingUnlistIndex();
+  };
+
   useEffect( () => {
     if(
       selectedTokenIndices.length &&
@@ -197,8 +228,11 @@ const Sell = (props) => {
       setShowListPopup(false);
   }, [selectedTokenIndices, whineList]);
 
-  const makeCallbackForIndex = (index) => (selected) => 
+  const makeSelectedCallbackForIndex = (index) => (selected) => 
     handleSelectionChange(selected, index);
+
+  const makeUnlistCallbackForIndex = (index) => () => 
+    handleUnlist(index);
 
   if(whineList.length)
     return (
@@ -207,8 +241,10 @@ const Sell = (props) => {
           {whineList.map( (whine, index) => <WrapItem key={whine.id}>
             <Whine
               {...whine}
-              setSelected={makeCallbackForIndex(index)}
+              setSelected={makeSelectedCallbackForIndex(index)}
               selected={selectedTokenIndices.includes(index)}
+              pendingUnlist={pendingUnlistIndex === index}
+              onUnlist={makeUnlistCallbackForIndex(index)}
               showRoyalties
             />
           </WrapItem>)}
@@ -251,7 +287,11 @@ const Sell = (props) => {
           listButtonRef={listButtonRef}
           drawerControls={drawerControls}
           selectedTokenIndices={selectedTokenIndices}
+          handleReset={reset}
         />
+        <Text px={3} pb={1}>
+          Ideally your updates should be visible immediately, but somtimes the subgraph backend takes a moment to refresh (occasionally minutes). You may need to click to a different page in this app and come back to see your changes. The frontend storage will be decoupled from the subgraph backend soon.
+        </Text>
       </>
     );
   else
