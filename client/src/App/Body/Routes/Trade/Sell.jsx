@@ -165,10 +165,15 @@ const Sell = (props) => {
   const handleSelectionChange = (selected, index) => {
     if(selected){
       setShowIntroText(false);
+      // If already selecting some and the one
+      // chosen now is listed, we should just ignore
+      // this new selection
       if(
-        !whineList[index].listed &&
-        !selectedTokenIndices.includes(index)
+        selectedTokenIndices.length &&
+        whineList[index].listed
       )
+        return;
+      if(!selectedTokenIndices.includes(index))
         setSelectedTokenIndices(indices => [...indices, index]);
     } else {
       const arrayLoc = selectedTokenIndices.indexOf(index);
@@ -180,11 +185,20 @@ const Sell = (props) => {
   };
 
   useEffect( () => {
-    if(selectedTokenIndices.length)
+    if(
+      selectedTokenIndices.length &&
+      !(
+        selectedTokenIndices.length === 1 &&
+        whineList[selectedTokenIndices[0]].listed
+      )
+    )
       setShowListPopup(true);
     else
       setShowListPopup(false);
-  }, [selectedTokenIndices]);
+  }, [selectedTokenIndices, whineList]);
+
+  const makeCallbackForIndex = (index) => (selected) => 
+    handleSelectionChange(selected, index);
 
   if(whineList.length)
     return (
@@ -193,8 +207,8 @@ const Sell = (props) => {
           {whineList.map( (whine, index) => <WrapItem key={whine.id}>
             <Whine
               {...whine}
-              index={index}
-              selectedCallback={handleSelectionChange}
+              setSelected={makeCallbackForIndex(index)}
+              selected={selectedTokenIndices.includes(index)}
               showRoyalties
             />
           </WrapItem>)}

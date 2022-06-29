@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import { 
   VStack,
   HStack,
@@ -40,10 +40,8 @@ const Overlay = ({children, ...props}) => {
 const useOutsideClickDetection = (ref, callback) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (ref.current && !ref.current.contains(event.target)) {
-        console.log("outsideClick");
+      if (ref.current && !ref.current.contains(event.target)) 
         callback();
-      }
     };
 
     // Bind the event listener
@@ -57,7 +55,6 @@ const useOutsideClickDetection = (ref, callback) => {
 
 const Whine = (props) => {
   const {
-    index,
     winery,
     varietal,
     vintage,
@@ -65,10 +62,10 @@ const Whine = (props) => {
     showRoyalties,
     image,
     listed,
-    selectedCallback,
+    selected,
+    setSelected,
   } = props;
 
-  const [selected, setSelected] = useState(false);
   const ref = useRef();
   
   const deselectOnClickAway = () => {
@@ -77,11 +74,6 @@ const Whine = (props) => {
   };
 
   useOutsideClickDetection(ref, deselectOnClickAway);
-
-  useEffect( () => {
-    if(selectedCallback)
-      selectedCallback(selected, index);
-  }, [selected, selectedCallback, index]);
 
   const handleClick = (event) => {
     event.preventDefault();
