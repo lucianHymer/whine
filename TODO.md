@@ -1,20 +1,33 @@
 # TO-DO
+- [ ] Add Approvals (and unappove e.g. to 0x0) to Graph
+- [ ] Add marketplace functionality - buy side
+- [ ] On server, watch for Register events in demo mode and send them some wine from a treasury
+- [ ] Decouple frontend data storage from Graph backend
+- [ ] Add top-level error boundary
+- [ ] Add HTTPS check in github pages, instruct to view HTTP
+- [ ] Add test mode check to contract and disable winery approval restrictions
 - [ ] Update deploy script to not overwrite networks
 - [ ] Add tests for axios\_authenticator
 - [ ] Add missing tests for everything as-is
-- [ ] Make Whine collection viewing live
-- [ ] Add winery register to front end
+- [ ] Add admin page - approve wineries
 - [ ] Make API handlers from the frontend to the backends
 - [ ] Organize server folder
 - [ ] Add ability to mint a whole release of a wine w/ custom quantity
 - [ ] Add ability to see if NFT minted/traded off-market (maybe Graph)
 - [ ] Winery reputation system
-- [ ] Swap out for graph API
 - [ ] Install a linter plugin and lock down a few styles
-- [ ] Make server use IPFS directory using same method as IPFS deploy
 - [ ] Set up backend continuous deployment
 - [ ] Set up frontend continuous deployment
+- [ ] Do something cool with wine bottle image generation
+- [ ] Add Unlist call to contract and call this from forntend
 - [ ] Enable dark mode
+- [ ] Make server use IPFS directory
+- [x] Add marketplace functionality - sell side
+- [x] Swap out for graph API
+- [x] Make Whine collection viewing live
+- [x] Add winery register to front end
+- [x] Add messaging system
+- [x] Add loading animation that listens for events
 - [x] Get client hosted
 - [x] Get server hosted
 - [x] Get contract on a test net

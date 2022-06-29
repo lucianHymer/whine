@@ -22,13 +22,21 @@ async function main() {
 
   const chainId = whine.provider._network.chainId;
   const { address } = whine;
-  const content = JSON.stringify({ networks: {
-    [chainId]: {address}
-  }});
 
-  const path = './artifacts/contracts/Whine.sol/network.json';
-  fs.writeFileSync(path, content, err => {
-    if(err) console.log(err);
+  const path = './artifacts/contracts/Whine.sol/Whine.json';
+  const altPath = './client/src/contracts/Whine.sol/Whine.json';
+  const whineArtifactsContents = fs.readFileSync(path);
+  const whineArtifacts = JSON.parse(whineArtifactsContents);
+  whineArtifacts.networks ||= {};
+  whineArtifacts.networks[chainId] = {address};
+
+  [path, altPath].map( path  => {
+    fs.mkdir('./client/src/contracts/Whine.sol', {recursive: true}, err => {
+      if(err) console.log(err);
+      fs.writeFileSync(path, JSON.stringify(whineArtifacts), err => {
+        if(err) console.log(err);
+      });
+    });
   });
 
   const signer = whine.signer.address;
@@ -37,13 +45,11 @@ async function main() {
   await whine['registerWinery(address,string)'](signer, "Lucian's Whines");
   await whine.approveWinery(signer);
 
-  console.log(`Wrote ${content} to ${path}`);
+  console.log(`Wrote networks to ${path} and ${altPath}`);
 
   console.log("Whine deployed to:", whine.address);
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
 main()
   .then(() => process.exit(0))
   .catch((error) => {

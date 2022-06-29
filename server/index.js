@@ -61,6 +61,8 @@ app.post('/create_nft_metadata', jsonParser, verifyAuthentication, (req, res) =>
   const { metadata } = req.body;
   pinata.testAuthentication().then((result) => {
     // TODO add options to this call to enable searching on IPFS
+    // TODO Maybe do a directory structure and update baseURI in
+    //   the contract each time
     pinata.pinJSONToIPFS(metadata).then( result => {
       console.log('IPFS Hash', result.IpfsHash);
       res.json({'ipfsHash': result.IpfsHash});
