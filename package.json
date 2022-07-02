@@ -18,5 +18,8 @@
     "test:debug": "mocha --inspect-brk --inspect test",
     "start": "hardhat node",
     "start:init": "hardhat run ./scripts/deploy-whine.js --network localhost"
+  },
+  "standard": {
+    "env": [ "mocha" ]
   }
 }

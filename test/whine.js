@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { ethers, waffle } = require('hardhat')
+const { ethers } = require('hardhat')
 const { constants, hash } = require('./helpers.js')
 
 describe('Whine', function () {
@@ -11,7 +11,7 @@ describe('Whine', function () {
   })
 
   beforeEach(async function () {
-    whine = await Whine.deploy(100)
+    whine = await Whine.deploy(100, false)
     whine.deployed()
   })
 
@@ -80,7 +80,7 @@ describe('Whine', function () {
     await whine.connect(addr1).approve(owner.address, 1)
     await expect(
       whine.sell(addr1.address, addr2.address, 1, 100)
-    ).to.be.revertedWith('Must send enough ETH')
+    ).to.be.revertedWith('Insufficient value sent')
   })
 
   it('Should issue royalties and fees on sale', async function () {

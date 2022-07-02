@@ -187,15 +187,17 @@ const Sell = props => {
       // chosen now is listed, we should just ignore
       // this new selection
       if (selectedTokenIndices.length && whineList[index].listed) return
-      if (!selectedTokenIndices.includes(index))
+      if (!selectedTokenIndices.includes(index)) {
         setSelectedTokenIndices(indices => [...indices, index])
+      }
     } else {
       const arrayLoc = selectedTokenIndices.indexOf(index)
-      if (arrayLoc > -1)
+      if (arrayLoc > -1) {
         setSelectedTokenIndices(indices => [
           ...indices.slice(0, arrayLoc),
           ...indices.slice(arrayLoc + 1)
         ])
+      }
     }
   }
 
@@ -221,9 +223,9 @@ const Sell = props => {
         selectedTokenIndices.length === 1 &&
         whineList[selectedTokenIndices[0]].listed
       )
-    )
+    ) {
       setShowListPopup(true)
-    else setShowListPopup(false)
+    } else setShowListPopup(false)
   }, [selectedTokenIndices, whineList])
 
   const makeSelectedCallbackForIndex = index => selected =>
@@ -231,7 +233,7 @@ const Sell = props => {
 
   const makeUnlistCallbackForIndex = index => () => handleUnlist(index)
 
-  if (whineList.length)
+  if (whineList.length) {
     return (
       <>
         <Wrap
@@ -304,12 +306,13 @@ const Sell = props => {
         </Text>
       </>
     )
-  else
+  } else {
     return (
       <Center h='100%'>
         <Heading>Mint some WHINE, then view it here.</Heading>
       </Center>
     )
+  }
 }
 
 export default Sell
