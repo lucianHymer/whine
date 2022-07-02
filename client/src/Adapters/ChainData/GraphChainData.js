@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios'
 
 const GraphChainData = {
   getWhineForAddress: async (address, limit) => {
@@ -9,7 +9,9 @@ const GraphChainData = {
           {
             users (where: {id: "${address.toLowerCase()}"}) {
               id
-              Whines (orderBy: tokenID orderDirection: desc ${limit ? `first: ${limit}` : ""}) {
+              Whines (orderBy: tokenID orderDirection: desc ${
+                limit ? `first: ${limit}` : ''
+              }) {
                 id
                 tokenID
                 tokenURI
@@ -24,11 +26,13 @@ const GraphChainData = {
           }
         `
       }
-    );
-    console.log('whines', ((response?.data?.data?.users || [])[0] || {}).Whines || []);
+    )
+    console.log(
+      'whines',
+      ((response?.data?.data?.users || [])[0] || {}).Whines || []
+    )
     return ((response?.data?.data?.users || [])[0] || {}).Whines || []
-  },
-};
+  }
+}
 
-
-export default GraphChainData;
+export default GraphChainData

@@ -1,4 +1,4 @@
-import { 
+import {
   FormLabel,
   FormControl,
   InputGroup,
@@ -6,13 +6,27 @@ import {
   NumberInputField,
   NumberInputStepper,
   NumberIncrementStepper,
-  NumberDecrementStepper,
-} from '@chakra-ui/react';
+  NumberDecrementStepper
+} from '@chakra-ui/react'
 
-const NumberField = ({id, label, value, setValue, step, min, max, precision, format, parse, pattern}) => {
+const NumberField = ({
+  id,
+  label,
+  value,
+  setValue,
+  step,
+  min,
+  max,
+  precision,
+  format,
+  parse,
+  pattern
+}) => {
   return (
     <FormControl isRequired mt={4}>
-      <FormLabel requiredIndicator='' htmlFor={id}>{label}</FormLabel>
+      <FormLabel requiredIndicator='' htmlFor={id}>
+        {label}
+      </FormLabel>
       <InputGroup size='sm'>
         <NumberInput
           w='100%'
@@ -33,7 +47,7 @@ const NumberField = ({id, label, value, setValue, step, min, max, precision, for
         </NumberInput>
       </InputGroup>
     </FormControl>
-  );
-};
+  )
+}
 
-export default NumberField;
+export default NumberField

@@ -34,7 +34,7 @@ contract Whine is ERC721URIStorage, AccessControl, ERC2981 {
   using Counters for Counters.Counter;
   Counters.Counter private _tokenId;
 
-  uint96 ownerTakeBasis;
+  uint96 private ownerTakeBasis;
 
   mapping(address => string) internal registeredWineryName;
 
@@ -42,7 +42,7 @@ contract Whine is ERC721URIStorage, AccessControl, ERC2981 {
   bytes32 public constant TRUSTEE_ROLE = keccak256("TRUSTEE_ROLE");
 
   constructor(uint96 _ownerTakeBasis) ERC721("Whine NFT", "WHINE") {
-    console.log('OWNER', msg.sender);
+    console.log("OWNER", msg.sender);
     _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     _setupRole(WINERY_ROLE, msg.sender);
     _setupRole(TRUSTEE_ROLE, msg.sender);
@@ -57,9 +57,9 @@ contract Whine is ERC721URIStorage, AccessControl, ERC2981 {
   }
 
   function getRegisteredWineryName(address wallet) public view returns (string memory) {
-    console.log('getRWN', wallet);
+    console.log("getRWN", wallet);
     string memory name = registeredWineryName[wallet];
-    console.log('name', name);
+    console.log("name", name);
     return name;
   }
 
@@ -71,7 +71,7 @@ contract Whine is ERC721URIStorage, AccessControl, ERC2981 {
   function registerWinery(address wallet, string calldata name) public {
     // TODO uncomment after testing
     // require(bytes(registeredWineryName[wallet]).length == 0, "Winery address already registered");
-    console.log('REGISTER', wallet);
+    console.log("REGISTER", wallet);
     registeredWineryName[wallet] = name;
     emit RegisterWinery(wallet);
     if(DEMO) {
@@ -91,7 +91,7 @@ contract Whine is ERC721URIStorage, AccessControl, ERC2981 {
       grantRole(WINERY_ROLE, wallet);
     }
 
-    console.log('APPROVE', wallet);
+    console.log("APPROVE", wallet);
     emit ApproveWinery(wallet);
   }
 
@@ -99,8 +99,8 @@ contract Whine is ERC721URIStorage, AccessControl, ERC2981 {
     address to,
     string memory ipfsMetadataURI,
     uint96 royaltyBasis
-  ) onlyRole(WINERY_ROLE) external returns (uint256) {
-    console.log('MINTER', msg.sender);
+  ) external onlyRole(WINERY_ROLE) returns (uint256) {
+    console.log("MINTER", msg.sender);
     _tokenId.increment();
 
     uint256 newNftTokenId = _tokenId.current();
@@ -122,10 +122,10 @@ contract Whine is ERC721URIStorage, AccessControl, ERC2981 {
     address to,
     uint256 tokenId,
     uint256 salePrice
-  ) payable public {
+  ) public payable {
     // Do this first to fail quickly if this is an invalid transfer
     safeTransferFrom(from, to, tokenId);
-    require(msg.value >= salePrice, "Must send enough ETH to initiate sale.");
+    require(msg.value >= salePrice, "");
 
     address royaltyReceiver;
     uint256 payout;
@@ -142,7 +142,7 @@ contract Whine is ERC721URIStorage, AccessControl, ERC2981 {
     emit Payout(royaltyReceiver, tokenId, payout);
   }
 
-  function _baseURI() pure internal override returns (string memory) {
+  function _baseURI() internal pure override returns (string memory) {
     return "ipfs://";
   }
 

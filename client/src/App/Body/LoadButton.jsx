@@ -1,51 +1,37 @@
-import React, { useReducer } from "react";
+import React, { useReducer } from 'react'
 
-import { 
-  VStack,
-  Button,
-  Spinner,
-  Text,
-} from '@chakra-ui/react';
+import { VStack, Button, Spinner, Text } from '@chakra-ui/react'
 
-const makeInitialState = (initialProps) => {
+const makeInitialState = initialProps => {
   return {
     initialProps,
-    props: initialProps,
-  };
-};
+    props: initialProps
+  }
+}
 
 const stageReducer = (state, dispatch) => {
-  const {
-    reset,
-    ...rest
-  } = dispatch;
+  const { reset, ...rest } = dispatch
 
-  const {
-    initialProps
-  } = state;
+  const { initialProps } = state
 
-  if(reset)
-    return makeInitialState(initialProps);
+  if (reset) return makeInitialState(initialProps)
 
   return {
     initialProps,
-    props: rest,
-  };
-};
+    props: rest
+  }
+}
 
-export const useLoadButtonReducer = (initialProps) => {
+export const useLoadButtonReducer = initialProps => {
   const [state, dispatch] = useReducer(
-    stageReducer, 
+    stageReducer,
     makeInitialState(initialProps)
-  );
+  )
 
-  return [
-    state.props,
-    dispatch,
-  ];
-};
+  return [state.props, dispatch]
+}
 
-const LoadButton = (props) => {
+const LoadButton = props => {
   const {
     showSpinner,
     showButton,
@@ -57,30 +43,33 @@ const LoadButton = (props) => {
     children,
     buttonOverrideProps,
     ...rest
-  } = props;
+  } = props
 
-  const buttonProps = Object.assign(callback ?  {
-    onClick: callback
-  } : {
-    type: 'submit'
-  }, buttonOverrideProps);
+  const buttonProps = Object.assign(
+    callback
+      ? {
+          onClick: callback
+        }
+      : {
+          type: 'submit'
+        },
+    buttonOverrideProps
+  )
 
   return (
     <VStack ref={innerRef} {...rest}>
-      {showSpinner && <Spinner
-        size='lg'
-        mb={4}
-        color='primary.main'
-        emptyColor='primary.100'
-      />}
+      {showSpinner && (
+        <Spinner
+          size='lg'
+          mb={4}
+          color='primary.main'
+          emptyColor='primary.100'
+        />
+      )}
       {!hideMessage && message && <Text mb={4}>{message}</Text>}
-      {showButton &&
-        <Button {...buttonProps}>
-          {buttonText || children}
-        </Button>
-      }
+      {showButton && <Button {...buttonProps}>{buttonText || children}</Button>}
     </VStack>
-  );
-};
+  )
+}
 
-export default LoadButton;
+export default LoadButton

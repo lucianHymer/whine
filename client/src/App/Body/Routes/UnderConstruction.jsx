@@ -1,40 +1,31 @@
-import React, { useState, useEffect } from "react";
-import { faker } from "@faker-js/faker";
-import {
-  Heading,
-  Text,
-  VStack,
-  Center,
-} from "@chakra-ui/react"
+import React, { useState, useEffect } from 'react'
+import { faker } from '@faker-js/faker'
+import { Heading, Text, VStack, Center } from '@chakra-ui/react'
 
 const UnderConstruction = () => {
-  const [phrase, setPhrase] = useState();
+  const [phrase, setPhrase] = useState()
 
-  const getPhrase = () => faker.company.catchPhrase();
-
-  useEffect(() => {
-    const interval = setInterval( () => {
-      setPhrase(getPhrase());
-    }, 7000);
-    return () => clearInterval(interval);
-  });
+  const getPhrase = () => faker.company.catchPhrase()
 
   useEffect(() => {
-    setPhrase(getPhrase());
-  }, []);
+    const interval = setInterval(() => {
+      setPhrase(getPhrase())
+    }, 7000)
+    return () => clearInterval(interval)
+  })
+
+  useEffect(() => {
+    setPhrase(getPhrase())
+  }, [])
 
   return (
     <Center h='100%'>
       <VStack>
-        <Heading>
-          Under Construction
-        </Heading>
-        <Text>
-          {phrase}
-        </Text>
+        <Heading>Under Construction</Heading>
+        <Text>{phrase}</Text>
       </VStack>
     </Center>
-  );
-};
+  )
+}
 
-export default UnderConstruction;
+export default UnderConstruction

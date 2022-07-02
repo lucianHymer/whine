@@ -1,24 +1,18 @@
-import React from "react";
-import Routes from './Body/Routes';
-import { 
-  Center,
-} from '@chakra-ui/react';
+import React from 'react'
+import Routes from './Body/Routes'
+import { Center } from '@chakra-ui/react'
 
 const NoWallet = () => {
   return (
-    <Center h="100%">
+    <Center h='100%'>
       Please connect your MetaMask wallet on the Goerli testnet
     </Center>
-  );
-};
+  )
+}
 
-const Body = (props) => {
-  const { whineContract } = props;
-  return (whineContract ?
-    <Routes {...props} />
-    :
-    <NoWallet {...props} />
-  );
-};
+const Body = props => {
+  const { whineContract } = props
+  return whineContract ? <Routes {...props} /> : <NoWallet {...props} />
+}
 
-export default Body;
+export default Body

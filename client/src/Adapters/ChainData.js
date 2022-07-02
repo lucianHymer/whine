@@ -1,16 +1,16 @@
-import TestChainData from "./ChainData/TestChainData";
-import GraphChainData from "./ChainData/GraphChainData";
+import TestChainData from './ChainData/TestChainData'
+import GraphChainData from './ChainData/GraphChainData'
 
-export const initializeChainData = (interfaceName) => {
-  let interfaceLibrary;
+export const initializeChainData = interfaceName => {
+  let interfaceLibrary
 
-  switch(interfaceName){
+  switch (interfaceName) {
     case 'graph':
-      interfaceLibrary = GraphChainData;
-      break;
+      interfaceLibrary = GraphChainData
+      break
     default:
-      interfaceLibrary = TestChainData;
+      interfaceLibrary = TestChainData
   }
 
-  return interfaceLibrary;
-};
+  return interfaceLibrary
+}

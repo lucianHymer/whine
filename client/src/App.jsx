@@ -1,74 +1,89 @@
-import React, { useState, useEffect, useRef } from "react";
-import Whine from "./contracts/Whine.sol/Whine.json";
+import React, { useState, useEffect, useRef } from 'react'
+import Whine from './contracts/Whine.sol/Whine.json'
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
-import axiosAuthenticatorMiddleware from './axios_authenticator';
-import { 
-  Box,
-} from '@chakra-ui/react';
-import Body from './App/Body';
-import Header from './App/Header';
-import { useMessages } from 'Messages';
+import axiosAuthenticatorMiddleware from './axios_authenticator'
+import { Box } from '@chakra-ui/react'
+import Body from './App/Body'
+import Header from './App/Header'
+import { useMessages } from 'Messages'
 
 const PAGES = ['Mint', 'Trade', 'Redeem']
 
-const usePrevious = (value) => {
-  const ref = useRef();
-  useEffect( () => { ref.current = value });
-  return ref.current;
-};
+const usePrevious = value => {
+  const ref = useRef()
+  useEffect(() => {
+    ref.current = value
+  })
+  return ref.current
+}
 
 const App = () => {
-  const { account, chainId, library, error } = useWeb3React();
-  const [ whineContract, setWhineContract ] = useState();
-  const previousAccount = usePrevious(account);
-  const previousChainId = usePrevious(chainId);
-  const messages = useMessages();
+  const { account, chainId, library, error } = useWeb3React()
+  const [whineContract, setWhineContract] = useState()
+  const previousAccount = usePrevious(account)
+  const previousChainId = usePrevious(chainId)
+  const messages = useMessages()
 
-  useEffect( () => {
+  useEffect(() => {
     // TODO see what happens with this when switching accounts
-    if(account){
-      const middleware = axiosAuthenticatorMiddleware.add(account, library, (errorMessage) => {
-        messages.error({
-          title: "Auth Error",
-          description: errorMessage,
-        });
-      });
+    if (account) {
+      const middleware = axiosAuthenticatorMiddleware.add(
+        account,
+        library,
+        errorMessage => {
+          messages.error({
+            title: 'Auth Error',
+            description: errorMessage
+          })
+        }
+      )
 
       return () => {
-        axiosAuthenticatorMiddleware.remove(middleware);
+        axiosAuthenticatorMiddleware.remove(middleware)
       }
     }
-  }, [account, library, messages]);
+  }, [account, library, messages])
 
-  useEffect( () => {
+  useEffect(() => {
     try {
-      if(error) console.log(error);
+      if (error) console.log(error)
       // Probably want to get rid of this IF stuff and
       // make this happen any time the web3react stuff changes
-      if(library && (
-        !whineContract || (
+      if (
+        library &&
+        (!whineContract ||
           account !== previousAccount ||
-          chainId !== previousChainId
-        ))) {
-        console.log('Account', account);
-        console.log('library', library);
+          chainId !== previousChainId)
+      ) {
+        console.log('Account', account)
+        console.log('library', library)
 
-        const deployedNetwork = Whine.networks[chainId];
-        setWhineContract(new ethers.Contract(
-          deployedNetwork.address,
-          Whine.abi,
-          library.getSigner(),
-        ));
+        const deployedNetwork = Whine.networks[chainId]
+        setWhineContract(
+          new ethers.Contract(
+            deployedNetwork.address,
+            Whine.abi,
+            library.getSigner()
+          )
+        )
       }
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
-        `Failed to load ethers, accounts, or contract. Check console for details.`,
-      );
-      console.error(error);
+        'Failed to load ethers, accounts, or contract. Check console for details.'
+      )
+      console.error(error)
     }
-  }, [error, account, chainId, library, whineContract, previousAccount, previousChainId]);
+  }, [
+    error,
+    account,
+    chainId,
+    library,
+    whineContract,
+    previousAccount,
+    previousChainId
+  ])
 
   return (
     <Box bg='background' h='100vh'>
@@ -79,7 +94,7 @@ const App = () => {
         <Body whineContract={whineContract} />
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default App;
+export default App
