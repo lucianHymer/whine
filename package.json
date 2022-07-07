@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.6.0",
-    "dotenv": "^16.0.1"
+    "dotenv": "^16.0.1",
+    "hardhat-contract-sizer": "^2.6.1",
+    "solidity-coverage": "^0.7.21"
   },
   "scripts": {
     "format": "prettier-standard --lint",
@@ -20,6 +22,8 @@
     "start:init": "hardhat run ./scripts/deploy-whine.js --network localhost"
   },
   "standard": {
-    "env": [ "mocha" ]
+    "env": [
+      "mocha"
+    ]
   }
 }
