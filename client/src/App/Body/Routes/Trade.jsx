@@ -11,7 +11,6 @@ const Buy = props => {
 }
 
 const Trade = props => {
-  const { whineContract } = props
   const { mode } = useParams()
 
   return (
@@ -20,11 +19,7 @@ const Trade = props => {
         More WHINE?
       </Heading>
       <PageSwitch gap={2} h={10} pages={['Sell', 'Buy']} baseURL='/trade' />
-      {mode === 'sell' ? (
-        <Sell whineContract={whineContract} />
-      ) : (
-        <Buy whineContract={whineContract} />
-      )}
+      {mode === 'sell' ? <Sell /> : <Buy />}
     </VStack>
   )
 }

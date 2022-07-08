@@ -3,33 +3,40 @@ const fs = require('fs')
 
 async function main () {
   const Whine = await hre.ethers.getContractFactory('Whine')
-  const whine = await Whine.deploy(100, true)
+  const whine = await Whine.deploy()
+  const WhineMarket = await hre.ethers.getContractFactory('WhineMarket')
 
   await whine.deployed()
+  const whineMarket = await WhineMarket.deploy(whine.address, 100, true)
+  await whineMarket.deployed()
 
-  writeNetworkToAbi(whine)
+  await whine.registerMarket(whineMarket.address)
+
+  writeNetworkToAbi('Whine', whine)
+  writeNetworkToAbi('WhineMarket', whineMarket)
 
   const signer = whine.signer.address
   console.log('signer', signer)
 
-  const tx = await whine['registerWinery(address,string)'](
+  const tx = await whineMarket['registerWinery(address,string)'](
     signer,
     "Lucian's Whines"
   )
   await tx.wait()
-  await whine.approveWinery(signer)
+  await whineMarket.approveWinery(signer)
 
   console.log('Whine deployed to:', whine.address)
+  console.log('WhineMarket deployed to:', whineMarket.address)
 }
 
-function writeNetworkToAbi (whine) {
-  const path = './artifacts/contracts/Whine.sol/Whine.json'
-  const altPath = './client/src/contracts/Whine.sol/Whine.json'
+function writeNetworkToAbi (name, contract) {
+  const path = `./artifacts/contracts/${name}.sol/${name}.json`
+  const altPath = `./client/src/contracts/${name}.sol/${name}.json`
 
-  const abiContents = getNewAbiContents(whine, path)
+  const abiContents = getNewAbiContents(contract, path)
 
   ;[path, altPath].map(path =>
-    fs.mkdir('./client/src/contracts/Whine.sol', { recursive: true }, err => {
+    fs.mkdir(`./client/src/contracts/${name}.sol`, { recursive: true }, err => {
       if (err) console.log(err)
       fs.writeFileSync(path, JSON.stringify(abiContents), err => {
         if (err) console.log(err)
@@ -39,8 +46,8 @@ function writeNetworkToAbi (whine) {
   )
 }
 
-function getNewAbiContents (whine, path) {
-  const { address, provider } = whine
+function getNewAbiContents (contract, path) {
+  const { address, provider } = contract
   const chainId = provider._network.chainId
 
   const whineArtifactsContents = fs.readFileSync(path)

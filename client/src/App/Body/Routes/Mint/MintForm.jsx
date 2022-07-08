@@ -8,9 +8,11 @@ import RoyaltiesField from './MintForm/RoyaltiesField'
 import VintageField from './MintForm/VintageField'
 import { useMessages } from 'Messages'
 import LoadButton, { useLoadButtonReducer } from 'App/Body/LoadButton'
+import { useContracts } from 'App/Contract'
 
 const MintForm = props => {
-  const { whineContract, winery } = props
+  const { winery } = props
+  const { whineMarketContract } = useContracts()
   const { account } = useWeb3React()
   const [varietal, setVarietal] = useState('')
   const [vintage, setVintage] = useState(new Date().getUTCFullYear())
@@ -54,7 +56,7 @@ const MintForm = props => {
           message:
             'Approve the transaction in your wallet, then wait for it to go through (Step 2 of 2)'
         })
-        const tx = await whineContract.mintNft(
+        const tx = await whineMarketContract.mintNft(
           account,
           res.data.ipfsHash,
           parseInt(parseFloat(royalties) * 100)

@@ -28,6 +28,7 @@ import constants from 'constants'
 import { PlusSquareIcon } from '@chakra-ui/icons'
 import LoadButton from 'App/Body/LoadButton'
 import { useMessages } from 'Messages'
+import { useContracts } from 'App/Contract'
 
 import Whine from './Whine'
 
@@ -67,11 +68,11 @@ const SellDrawer = props => {
     whineList,
     selectedTokenIndices,
     listButtonRef,
-    whineContract,
     drawerControls,
     handleReset
   } = props
 
+  const { whineContract } = useContracts()
   const [pendingApproval, setPendingApproval] = useState(false)
   const [listPrice, setListPrice] = useState(0.05)
   const messages = useMessages()
@@ -156,7 +157,6 @@ const SellDrawer = props => {
 
 // TODO add "Clear Selection", need to bump up highlight logic
 const Sell = props => {
-  const { whineContract } = props
   const [whineList, refreshWhineList] = useWineFromChain()
   const [selectedTokenIndices, setSelectedTokenIndices] = useState([])
   const [showIntroText, setShowIntroText] = useState(true)
@@ -165,6 +165,7 @@ const Sell = props => {
   const drawerControls = useDisclosure()
   const listButtonRef = useRef()
   const messages = useMessages()
+  const { whineContract } = useContracts()
 
   const reset = () => {
     setSelectedTokenIndices([])
@@ -291,7 +292,6 @@ const Sell = props => {
         </Slide>
         <SellDrawer
           whineList={whineList}
-          whineContract={whineContract}
           listButtonRef={listButtonRef}
           drawerControls={drawerControls}
           selectedTokenIndices={selectedTokenIndices}

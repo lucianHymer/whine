@@ -1,6 +1,7 @@
 import React from 'react'
 import Routes from './Body/Routes'
 import { Center } from '@chakra-ui/react'
+import { useContracts } from './Contract'
 
 const NoWallet = () => {
   return (
@@ -11,7 +12,7 @@ const NoWallet = () => {
 }
 
 const Body = props => {
-  const { whineContract } = props
+  const { whineContract } = useContracts()
   return whineContract ? <Routes {...props} /> : <NoWallet {...props} />
 }
 

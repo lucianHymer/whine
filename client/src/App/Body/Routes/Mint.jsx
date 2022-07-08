@@ -5,15 +5,17 @@ import { Center } from '@chakra-ui/react'
 import Card from '../Card'
 import MintForm from './Mint/MintForm'
 import WineryRegisterForm from './Mint/WineryRegisterForm'
+import { useContracts } from 'App/Contract'
 
-const Mint = ({ whineContract }) => {
+const Mint = props => {
   const { account } = useWeb3React()
+  const { whineMarketContract } = useContracts()
   const [winery, setWinery] = useState()
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     if (account && !loaded) {
-      whineContract.getRegisteredWineryName(account).then(name => {
+      whineMarketContract.getRegisteredWineryName(account).then(name => {
         setWinery(name)
         setLoaded(true)
       })
@@ -24,7 +26,7 @@ const Mint = ({ whineContract }) => {
         setLoaded(false)
       }
     }
-  }, [whineContract, account, loaded])
+  }, [whineMarketContract, account, loaded])
 
   let content
   if (!loaded) {
@@ -32,14 +34,9 @@ const Mint = ({ whineContract }) => {
   } else {
     let component
     if (winery) {
-      component = <MintForm whineContract={whineContract} winery={winery} />
+      component = <MintForm winery={winery} />
     } else {
-      component = (
-        <WineryRegisterForm
-          whineContract={whineContract}
-          setWinery={setWinery}
-        />
-      )
+      component = <WineryRegisterForm setWinery={setWinery} />
     }
     content = (
       <Card h='min-content' w={['70%', '50%', '40%', '30%']}>

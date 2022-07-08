@@ -8,9 +8,11 @@ import {
 } from '@chakra-ui/react'
 import { useMessages } from 'Messages'
 import LoadButton from 'App/Body/LoadButton'
+import { useContracts } from 'App/Contract'
 
 const WineryRegisterForm = props => {
-  const { whineContract, setWinery } = props
+  const { setWinery } = props
+  const { whineMarketContract } = useContracts()
   const [wineryInput, setWineryInput] = useState('')
   const [pending, setPending] = useState(false)
   const messages = useMessages()
@@ -22,7 +24,7 @@ const WineryRegisterForm = props => {
   }
 
   const registerWinery = () => {
-    whineContract['registerWinery(string)'](wineryInput)
+    whineMarketContract['registerWinery(string)'](wineryInput)
       .then(tx => tx.wait())
       .then(txReceipt => {
         console.log('txReceipt', txReceipt)
