@@ -16,6 +16,7 @@
   },
   "scripts": {
     "format": "prettier-standard --lint",
+    "coverage": "hardhat coverage",
     "test": "hardhat test",
     "test:debug": "mocha --inspect-brk --inspect test",
     "start": "hardhat node",
