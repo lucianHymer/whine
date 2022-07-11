@@ -1,58 +1,67 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// When running the script with `npx hardhat run <script>` you'll find the Hardhat
-// Runtime Environment's members available in the global scope.
-const hre = require("hardhat");
-const fs = require("fs");
+const hre = require('hardhat')
+const fs = require('fs')
 
-async function main() {
-  // Hardhat always runs the compile task when running scripts with its command
-  // line interface.
-  //
-  // If this script is run directly using `node` you may want to call compile
-  // manually to make sure everything is compiled
-  // await hre.run('compile');
+async function main () {
+  const Whine = await hre.ethers.getContractFactory('Whine')
+  const whine = await Whine.deploy()
+  const WhineMarket = await hre.ethers.getContractFactory('WhineMarket')
 
-  // We get the contract to deploy
-  const Whine = await hre.ethers.getContractFactory("Whine");
-  const whine = await Whine.deploy(100);
+  await whine.deployed()
+  const whineMarket = await WhineMarket.deploy(whine.address, 100, true)
+  await whineMarket.deployed()
 
-  await whine.deployed();
+  await whine.registerMarket(whineMarket.address)
 
-  const chainId = whine.provider._network.chainId;
-  const { address } = whine;
+  writeNetworkToAbi('Whine', whine)
+  writeNetworkToAbi('WhineMarket', whineMarket)
 
-  const path = './artifacts/contracts/Whine.sol/Whine.json';
-  const altPath = './client/src/contracts/Whine.sol/Whine.json';
-  const whineArtifactsContents = fs.readFileSync(path);
-  const whineArtifacts = JSON.parse(whineArtifactsContents);
-  whineArtifacts.networks ||= {};
-  whineArtifacts.networks[chainId] = {address};
+  const signer = whine.signer.address
+  console.log('signer', signer)
 
-  [path, altPath].map( path  => {
-    fs.mkdir('./client/src/contracts/Whine.sol', {recursive: true}, err => {
-      if(err) console.log(err);
-      fs.writeFileSync(path, JSON.stringify(whineArtifacts), err => {
-        if(err) console.log(err);
-      });
-    });
-  });
+  const tx = await whineMarket['registerWinery(address,string)'](
+    signer,
+    "Lucian's Whines"
+  )
+  await tx.wait()
+  await whineMarket.approveWinery(signer)
 
-  const signer = whine.signer.address;
-  console.log('signer', signer);
+  console.log('Whine deployed to:', whine.address)
+  console.log('WhineMarket deployed to:', whineMarket.address)
+}
 
-  await whine['registerWinery(address,string)'](signer, "Lucian's Whines");
-  await whine.approveWinery(signer);
+function writeNetworkToAbi (name, contract) {
+  const path = `./artifacts/contracts/${name}.sol/${name}.json`
+  const altPath = `./client/src/contracts/${name}.sol/${name}.json`
 
-  console.log(`Wrote networks to ${path} and ${altPath}`);
+  const abiContents = getNewAbiContents(contract, path)
 
-  console.log("Whine deployed to:", whine.address);
+  ;[path, altPath].map(path =>
+    fs.mkdir(`./client/src/contracts/${name}.sol`, { recursive: true }, err => {
+      if (err) console.log(err)
+      fs.writeFileSync(path, JSON.stringify(abiContents), err => {
+        if (err) console.log(err)
+        console.log(`Wrote networks to ${path} and ${altPath}`)
+      })
+    })
+  )
+}
+
+function getNewAbiContents (contract, path) {
+  const { address, provider } = contract
+  const chainId = provider._network.chainId
+
+  const whineArtifactsContents = fs.readFileSync(path)
+  const whineArtifacts = JSON.parse(whineArtifactsContents)
+
+  whineArtifacts.networks ||= {}
+  whineArtifacts.networks[chainId] = { address }
+
+  return whineArtifacts
 }
 
 main()
   .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+  .catch(error => {
+    console.error(error)
+    process.exit(1)
+  })

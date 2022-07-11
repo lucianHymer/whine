@@ -1,7 +1,7 @@
-import React from "react";
-import { InjectedConnector } from "@web3-react/injected-connector";
+import React from 'react'
+import { InjectedConnector } from '@web3-react/injected-connector'
 import { useWeb3React } from '@web3-react/core'
-import { 
+import {
   VStack,
   Flex,
   Spacer,
@@ -11,28 +11,28 @@ import {
   Menu,
   MenuList,
   MenuItem,
-  MenuButton,
-} from "@chakra-ui/react";
-import { HamburgerIcon } from "@chakra-ui/icons";
-import PageSwitch from "./PageSwitch";
+  MenuButton
+} from '@chakra-ui/react'
+import { HamburgerIcon } from '@chakra-ui/icons'
+import PageSwitch from './PageSwitch'
 
 const MetamaskWallet = new InjectedConnector({
-  supportedChainIds: [31337, 5],
-});
+  supportedChainIds: [31337, 5]
+})
 
 const WalletButtonText = () => {
-  const { account } = useWeb3React();
+  const { account } = useWeb3React()
 
-  if(account)
+  if (account)
     return (
       <>
         <Spacer />
-        <Text color='secondary.main'>{"\u2B24"}</Text>
+        <Text color='secondary.main'>{'\u2B24'}</Text>
         <Spacer />
         Connected
         <Spacer />
       </>
-    );
+    )
   else
     return (
       <>
@@ -40,21 +40,21 @@ const WalletButtonText = () => {
         Connect Wallet
         <Spacer />
       </>
-    );
-};
+    )
+}
 
-const Header = (props) => {
-  const { activate, account } = useWeb3React();
-  const { activate: activateData } = useWeb3React('data');
-  const { pages } = props;
-  const direction = useBreakpointValue({base: 'vertical', sm: 'horizontal'});
+const Header = props => {
+  const { activate, account } = useWeb3React()
+  const { activate: activateData } = useWeb3React('data')
+  const { pages } = props
+  const direction = useBreakpointValue({ base: 'vertical', sm: 'horizontal' })
 
   const handleClick = () => {
-    activate(MetamaskWallet); 
-    activateData(MetamaskWallet);
-  };
+    activate(MetamaskWallet)
+    activateData(MetamaskWallet)
+  }
 
-  const pageSwitch = <PageSwitch gap={2} h={10} pages={pages} />;
+  const pageSwitch = <PageSwitch gap={2} h={10} pages={pages} />
   const connectButton = (
     <Button
       m={2}
@@ -62,11 +62,11 @@ const Header = (props) => {
       size='md'
       onClick={handleClick}
     >
-      <Flex w="8em">
+      <Flex w='8em'>
         <WalletButtonText />
       </Flex>
     </Button>
-  );
+  )
 
   const menu = (
     <Menu>
@@ -77,10 +77,12 @@ const Header = (props) => {
         as={Button}
       >
         <Flex align='center'>
-          {direction === 'vertical' && <>
-            <Spacer />
-            Menu
-          </>}
+          {direction === 'vertical' && (
+            <>
+              <Spacer />
+              Menu
+            </>
+          )}
           <Spacer />
           <HamburgerIcon />
           <Spacer />
@@ -88,24 +90,24 @@ const Header = (props) => {
       </MenuButton>
       <MenuList>
         <MenuItem
-          as="a"
-          href="https://github.com/lucianHymer/whine"
-          target="_blank"
+          as='a'
+          href='https://github.com/lucianHymer/whine'
+          target='_blank'
         >
           View Docs
         </MenuItem>
         <MenuItem
-          as="a"
-          href="https://discord.com/users/964361147371360286"
-          target="_blank"
+          as='a'
+          href='https://discord.com/users/964361147371360286'
+          target='_blank'
         >
           Contact Creator
         </MenuItem>
       </MenuList>
     </Menu>
-  );
+  )
 
-  if(direction === 'vertical')
+  if (direction === 'vertical')
     return (
       <VStack h='100%'>
         <Flex>
@@ -114,7 +116,7 @@ const Header = (props) => {
         </Flex>
         {pageSwitch}
       </VStack>
-    );
+    )
   else
     return (
       <Flex h='100%' pl={[0, null, 10]}>
@@ -123,8 +125,7 @@ const Header = (props) => {
         {connectButton}
         {menu}
       </Flex>
-    );
+    )
+}
 
-};
-
-export default Header;
+export default Header

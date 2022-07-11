@@ -10,12 +10,22 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.6.0",
-    "dotenv": "^16.0.1"
+    "dotenv": "^16.0.1",
+    "hardhat-contract-sizer": "^2.6.1",
+    "solidity-coverage": "^0.7.21"
   },
   "scripts": {
+    "format": "prettier-standard --lint '{scripts,test,client/src}/**'",
+    "size": "npx hardhat size-contracts",
+    "coverage": "hardhat coverage",
     "test": "hardhat test",
     "test:debug": "mocha --inspect-brk --inspect test",
     "start": "hardhat node",
     "start:init": "hardhat run ./scripts/deploy-whine.js --network localhost"
+  },
+  "standard": {
+    "env": [
+      "mocha"
+    ]
   }
 }

@@ -1,4 +1,5 @@
 # TO-DO
+
 - [ ] Add Approvals (and unappove e.g. to 0x0) to Graph
 - [ ] Add marketplace functionality - buy side
 - [ ] On server, watch for Register events in demo mode and send them some wine from a treasury
@@ -7,7 +8,7 @@
 - [ ] Add HTTPS check in github pages, instruct to view HTTP
 - [ ] Add test mode check to contract and disable winery approval restrictions
 - [ ] Update deploy script to not overwrite networks
-- [ ] Add tests for axios\_authenticator
+- [ ] Add tests for axios_authenticator
 - [ ] Add missing tests for everything as-is
 - [ ] Add admin page - approve wineries
 - [ ] Make API handlers from the frontend to the backends
