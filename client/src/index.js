@@ -1,4 +1,4 @@
-import constants from './constants'
+import constants from './whineConstants'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
@@ -20,8 +20,9 @@ function getMetamaskLibrary (provider) {
 
 function getDataLibrary (provider) {
   const chainId = parseInt(provider.networkVersion)
-  if (chainId === constants.HARDHAT_CHAIN_ID)
+  if (chainId === constants.HARDHAT_CHAIN_ID) {
     return getMetamaskLibrary(provider)
+  }
 
   return InfuraProvider.getWebSocketProvider(
     chainId,

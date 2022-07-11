@@ -1,6 +1,6 @@
 import { useEffect, createContext, useContext, useState, useRef } from 'react'
 import { useWeb3React } from '@web3-react/core'
-import constants from 'constants'
+import constants from 'whineConstants'
 import { ethers } from 'ethers'
 import Whine from '../contracts/Whine.sol/Whine.json'
 import WhineMarket from '../contracts/WhineMarket.sol/WhineMarket.json'
@@ -78,10 +78,12 @@ const useEventListener = () => {
   const { library, chainId } = useWeb3React('data')
 
   const listen = filter => {
+    /* eslint-disable promise/param-names */
     return new Promise(outerResolve => {
       if (chainId === constants.HARDHAT_CHAIN_ID) {
         let listener
         new Promise(innerResolve => {
+          /* eslint-enable promise/param-names */
           library.once('block', num => {
             console.log('block', num)
             listener = (...eventArgs) => {

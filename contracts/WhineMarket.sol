@@ -6,6 +6,7 @@ import "./IWhine.sol";
 import "hardhat/console.sol";
 
 contract WhineMarket is AccessControl {
+
     /**
      * @dev Emitted when royalties are paid to `to` from the sale of `tokenId`
      */
@@ -66,8 +67,7 @@ contract WhineMarket is AccessControl {
     }
 
     function registerWinery(address wallet, string calldata name) public {
-        // TODO uncomment after testing
-        // require(bytes(registeredWineryName[wallet]).length == 0, "Winery address already registered");
+        require(bytes(registeredWineryName[wallet]).length == 0, "Address already registered");
         console.log("REGISTER", wallet);
         registeredWineryName[wallet] = name;
         emit RegisterWinery(wallet);
@@ -100,12 +100,6 @@ contract WhineMarket is AccessControl {
         emit ApproveWinery(wallet);
     }
 
-    // function approveMultiple(address to, uint256[] calldata tokenIds) public {
-    //     for(uint i = 0; i<tokenIds.length; i++){
-    //         approve(to, tokenIds[i]);
-    //     }
-    // }
-
     function sell(
         address payable from,
         address to,
@@ -131,5 +125,6 @@ contract WhineMarket is AccessControl {
         emit Payout(royaltyReceiver, tokenId, payout);
     }
 
+    // solhint-disable-next-line
     receive() external payable {}
 }

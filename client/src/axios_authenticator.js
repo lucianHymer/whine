@@ -1,5 +1,5 @@
 import axios from 'axios'
-import constants from 'constants'
+import constants from 'whineConstants'
 import { Service } from 'axios-middleware'
 
 // TODO add cancellation of orig request on auth failure

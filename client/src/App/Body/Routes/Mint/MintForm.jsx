@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useWeb3React } from '@web3-react/core'
 import { Input, FormLabel, FormControl } from '@chakra-ui/react'
 
-import constants from 'constants'
+import constants from 'whineConstants'
 import RoyaltiesField from './MintForm/RoyaltiesField'
 import VintageField from './MintForm/VintageField'
 import { useMessages } from 'Messages'

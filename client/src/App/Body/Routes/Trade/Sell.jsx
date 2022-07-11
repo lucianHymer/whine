@@ -24,7 +24,7 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper
 } from '@chakra-ui/react'
-import constants from 'constants'
+import constants from 'whineConstants'
 import { PlusSquareIcon } from '@chakra-ui/icons'
 import LoadButton from 'App/Body/LoadButton'
 import { useMessages } from 'Messages'
@@ -104,7 +104,7 @@ const SellDrawer = props => {
     <Drawer
       isOpen={drawerControls.isOpen}
       placement='right'
-      onClose={drawerControls.onClose}
+      onClose={drawerControls.onClose} // eslint-disable-line react/jsx-handler-names
       finalFocusRef={listButtonRef}
     >
       <DrawerOverlay />
@@ -135,7 +135,7 @@ const SellDrawer = props => {
             display={pendingApproval ? 'none' : 'inline-flex'}
             variant='outline'
             mr={3}
-            onClick={drawerControls.onClose}
+            onClick={drawerControls.onClose} // eslint-disable-line react/jsx-handler-names
           >
             Cancel
           </Button>
@@ -277,7 +277,7 @@ const Sell = props => {
               mb={3}
               p={8}
               w={[56, 72]}
-              onClick={drawerControls.onOpen}
+              onClick={drawerControls.onOpen} // eslint-disable-line react/jsx-handler-names
             >
               <PlusSquareIcon boxSize={8} mr={8} />
               <Text fontSize={['lg', '2xl']} as='span'>

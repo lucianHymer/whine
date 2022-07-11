@@ -29,7 +29,9 @@ const constants = [
   }
 ].reduce((constants, constant) => {
   const { name, prod, devl } = constant
-  const useDevVal = isDevelopment && constant.hasOwnProperty('devl')
+  const useDevVal =
+    isDevelopment && Object.prototype.hasOwnProperty.call(constant, 'devl')
+
   return {
     ...constants,
     [name]: useDevVal ? devl : prod
