@@ -5,10 +5,12 @@ WHINE is an NFT token representing a single bottle of wine.
 The code here provides:
 
 - The customized ERC721 token contract
+- A marketplace contract
 - A client-side application for minting, trading, and redeeming
   token
 - A NodeJS server-side application to handle
   steps in the minting process which require privary
+- A [subgraph](https://thegraph.com/hosted-service/subgraph/lucianhymer/whine) for the WHINE token
 
 Winery owners can mint WHINE tokens and distribute them at an
 initial sale price.
