@@ -78,12 +78,10 @@ const useEventListener = () => {
   const { library, chainId } = useWeb3React('data')
 
   const listen = filter => {
-    /* eslint-disable promise/param-names */
     return new Promise(outerResolve => {
       if (chainId === constants.HARDHAT_CHAIN_ID) {
         let listener
         new Promise(innerResolve => {
-          /* eslint-enable promise/param-names */
           library.once('block', num => {
             console.log('block', num)
             listener = (...eventArgs) => {
