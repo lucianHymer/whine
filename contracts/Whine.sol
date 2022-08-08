@@ -6,10 +6,11 @@ import "@openzeppelin/contracts/token/common/ERC2981.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import "hardhat/console.sol";
 import "./IWhine.sol";
 
-contract Whine is IWhine, ERC721URIStorage, AccessControl, ERC2981 {
+contract Whine is ERC165, IWhine, ERC721URIStorage, AccessControl, ERC2981 {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenId;
 
@@ -58,8 +59,13 @@ contract Whine is IWhine, ERC721URIStorage, AccessControl, ERC2981 {
         return "ipfs://";
     }
 
-    function supportsInterface(bytes4 interfaceId) public view override(ERC721, AccessControl, ERC2981, IERC165) returns (bool) {
-        return super.supportsInterface(interfaceId);
+    function supportsInterface(bytes4 interfaceId) public view override(ERC721, AccessControl, ERC2981, IERC165, ERC165) returns (bool) {
+        return (
+            ERC721.supportsInterface(interfaceId) || 
+            AccessControl.supportsInterface(interfaceId) ||
+            ERC2981.supportsInterface(interfaceId) ||
+            ERC165.supportsInterface(interfaceId)
+        );
     }
 
     /**

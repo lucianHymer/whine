@@ -20,6 +20,11 @@ describe('Whine', function () {
     expect(await whine.supportsInterface(ERC721InterfaceID)).to.equal(true)
   })
 
+  it('Should support AccessControl Interface', async function () {
+    const interfaceID = '0x7965db0b'
+    expect(await whine.supportsInterface(interfaceID)).to.equal(true)
+  })
+
   it('Should approve multiple tokens', async function () {
     ;['1', '2'].map(async metadataURI => {
       await whine.mintNft(owner.address, metadataURI, 200)
